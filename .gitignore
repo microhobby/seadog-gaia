@@ -1,1 +1,2 @@
-./kernel/rpi/artifacts
+kernel/rpi/artifacts/
+uboot/rpi/artifacts/
