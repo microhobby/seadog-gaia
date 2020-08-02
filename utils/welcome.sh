@@ -87,7 +87,7 @@ function seadogWelcome () {
     echo "               .+hNMMMMMMNds-                     .+hNMMMMMMNdo-                "
     echo "                   '.-:-.'                           ''.::-''                   "
 
-    sleep 10s
+    sleep 2s
 }
 
 function seadogMiniWelcome () {
