@@ -20,6 +20,7 @@ case "$1" in
         writeln "Raspberry Pi 3B+"
 
         # compile u-boot
+        ./uboot/rpi/build-raspi-3bp.sh
 
         # compile mainline Kernel
         ./kernel/rpi/build-raspi-3bp.sh
