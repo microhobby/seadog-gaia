@@ -21,6 +21,10 @@ fi
 defconfig="../../../../seadog-gaia/kernel/$defconfig"
 artifacts="../seadog-gaia/kernel/$artifacts"
 
+# create the artifacts folder
+mkdir -p $artifacts
+sudo chmod -R 777 $artifacts
+
 # go to source folder
 cd $kernel_src
 
