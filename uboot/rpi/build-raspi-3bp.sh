@@ -8,4 +8,4 @@ export defconfig="./rpi/configs/bcm2837_rpi_3bp_defconfig"
 export dtb_prefix="broadcom/bcm28"
 export uboot_src="../u-boot"
 
-./uboot/build-aarch-common.sh "bcm2837-rpi-3bp" "CLEAN"
+./uboot/build-aarch-common.sh "bcm2837-rpi-3bp" "$CLEAN"
