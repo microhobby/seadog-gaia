@@ -6,8 +6,8 @@
 # compile boot script for u-boot
 function compileBootScript () {
 	mkimage -A arm -O linux -T script -C none \
-		-n ./u-boot-scripts/$1.scr \
-		-d ./u-boot-scripts/$1.scr \
+		-n ./uboot/$1/scripts/$2.scr \
+		-d ./uboot/$1/scripts/$2.scr \
 		$artifacts/boot.scr.uimg
 	pwd
 	lastError=$(lastErrorCheck $lastError)
@@ -20,7 +20,7 @@ fi
 
 # append the gaia path
 defconfig="../../seadog-gaia/uboot/$defconfig"
-artifacts="../seadog-gaia/uboot/$artifacts"
+export artifacts="../seadog-gaia/uboot/$artifacts"
 
 # create the artifacts folder
 mkdir -p $artifacts
@@ -45,6 +45,9 @@ writeln "🔥 COMPILE"
 make CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts -j $jobs
 lastError=$(lastErrorCheck $lastError)
 cd -
+
+# build script
+compileBootScript rpi rpi3bp
 
 if [ "$lastError" -ne "0" ]; then
 	writelnError "ERRORS DURING BUILD 😖❌"
