@@ -10,7 +10,13 @@ function compileBootScript () {
 		-d ./uboot/$1/scripts/$2.scr \
 		$artifacts/boot.scr.uimg
 	pwd
-	lastError=$(lastErrorCheck $lastError)
+	
+	checkError
+}
+
+# terminate message
+function checkError () {
+	checkErrorAndKill 'ERRORS DURING U-BOOT BUILD 😖❌'
 }
 
 # check if we have jobs
@@ -34,25 +40,20 @@ cd $uboot_src
 if [ "$2" != "no-clean" ]; then
     writeln "🧹 CLEAN"
     make CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts clean
-    lastError=$(lastErrorCheck $lastError)
+    checkError
 fi
 pwd
 writeln "🧰 CONFIG"
 make CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts $defconfig
-lastError=$(lastErrorCheck $lastError)
+checkError
 
 writeln "🔥 COMPILE"
 make CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts -j $jobs
-lastError=$(lastErrorCheck $lastError)
+checkError
 cd -
 
 # build script
 compileBootScript rpi rpi3bp
 
-if [ "$lastError" -ne "0" ]; then
-	writelnError "ERRORS DURING BUILD 😖❌"
-	exit -1
-else
-	writeln "U-BOOT BUILD DONE 👌😎"
-	exit 0
-fi
+writeln "U-BOOT BUILD DONE 👌😎"
+exit 0

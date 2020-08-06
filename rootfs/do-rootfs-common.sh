@@ -2,6 +2,11 @@
 # use message utils
 . ./utils/fancyTerminalUtils.sh --source-only
 
+# terminate message
+function checkError () {
+	checkErrorAndKill 'ERRORS DURING ROOTFS BUILD 😖❌'
+}
+
 # create the template disk
 function createImg () {
     writeln "Create IMG"
@@ -25,6 +30,8 @@ function createImg () {
     sudo fatlabel /dev/mapper/loop0p1 'boot'
     sudo e2label /dev/mapper/loop0p2 'seadog'
     sudo kpartx -d dist/$1/$1-seadog.img
+
+    checkError
 }
 
 function mountImg () {
@@ -34,6 +41,8 @@ function mountImg () {
     sudo kpartx -a dist/$1/$1-seadog.img
     sudo mount /dev/mapper/loop0p1 rootfs/mntfat
     sudo mount /dev/mapper/loop0p2 rootfs/mntext
+
+    checkError
 }
 
 function umountImg () {
@@ -43,6 +52,8 @@ function umountImg () {
     sudo umount /dev/mapper/loop0p1 rootfs/mntfat
     sudo umount /dev/mapper/loop0p2 rootfs/mntext
     sudo kpartx -d dist/$1/$1-seadog.img
+
+    checkError
 }
 
 function doRootfsArm64 () {
@@ -51,6 +62,8 @@ function doRootfsArm64 () {
     # unpack
     sudo tar -xzf rootfs/alpine-minirootfs-3.12.0-aarch64.tar.gz \
         -C rootfs/mntext/
+
+    checkError
 }
 
 function doRootfsCommon () {
@@ -77,6 +90,8 @@ function doBootfs () {
     sudo cp \
         kernel/$1/artifacts/$2/arch/arm64/boot/dts/$4/$5 \
         rootfs/mntfat/
+    
+    checkError
 }
 
 function prepare () {
@@ -87,8 +102,12 @@ function prepare () {
     # create
     mkdir rootfs/mntext
     mkdir rootfs/mntfat
+
+    checkError
 }
 
 function finish () {
     mv dist/$1/$1-seadog.img dist/$1/$1-seadog-$(date +%s).img
+
+    checkError
 }

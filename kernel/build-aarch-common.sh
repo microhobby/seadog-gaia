@@ -3,6 +3,11 @@
 # use message utils
 . ./utils/fancyTerminalUtils.sh --source-only
 
+# terminate message
+function checkError () {
+	checkErrorAndKill 'ERRORS DURING KERNEL BUILD 😖❌'
+}
+
 writeln "KERNEL BUILD FOR $1"
 writeln "Author: Matheus Castello <matheus@castello.eng.br>"
 echo "Version: 🌠"
@@ -37,57 +42,54 @@ fi
 
 writeln "CONFIG 🧰"
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts $defconfig
-lastError=$(lastErrorCheck $lastError)
+checkError
 
 writeln "COMPILE zImage 🔥"
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts Image -j $jobs
-lastError=$(lastErrorCheck $lastError)
+checkError
 
 writeln "COMPILE modules 🔥🔥"
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts modules -j $jobs
-lastError=$(lastErrorCheck $lastError)
+checkError
 
 if [ "$3" != "no-install-modules" ]; then
 	writeln "INSTALL modules 🔥🔥🔥"
 	sudo make O=$artifacts INSTALL_MOD_PATH=$path modules_install
-	lastError=$(lastErrorCheck $lastError)
+	checkError
 	sudo make O=$artifacts ARCH=arm64 INSTALL_HDR_PATH=$path/usr headers_install
-	lastError=$(lastErrorCheck $lastError)
+	checkError
 fi
 
 writeln "COMPILE dtb 🔥🔥🔥🔥"
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts dtbs -j $jobs
-lastError=$(lastErrorCheck $lastError)
+checkError
 
 echo "Recording analytics 💾"
 cd -
 countCompiles=$(wget "http://microhobby.com.br/safira2/kernelbuild.php?name=$1&error=$lastError"  -q -O -)
 writeln "COMPILED KERNEL :: $countCompiles 📑"
 
-if [ "$lastError" -ne "0" ]; then
-	writelnError "ERRORS DURING BUILD 😖❌"
-	exit -1
-else
-	writeln "COPY TO SDCARD 💾"
-	cd -
-	cd $artifacts
+writeln "COPY TO SDCARD 💾"
+cd -
+cd $artifacts
 
-	# umount and copy if we have paths
-	if [ "$path_boot" != "" ]; then
-		sudo cp arch/arm64/boot/dts/*$dtb_prefix* $path_boot
-		sudo cp arch/arm64/boot/Image $path_boot
-		sudo umount $path_boot
-		echo "Boot files ✔️"
-	fi
+# umount and copy if we have paths
+if [ "$path_boot" != "" ]; then
+	sudo cp arch/arm64/boot/dts/*$dtb_prefix* $path_boot
+	sudo cp arch/arm64/boot/Image $path_boot
+	sudo umount $path_boot
 
-	if [ "$path" != "" ]; then
-		sudo umount $path
-	fi
-
-	if [ "$path_ramdisk" != "" ]; then
-		sudo umount $path_ramdisk
-	fi
-	
-	writeln "KERNEL BUILD DONE 👌😎"
-	exit 0
+	checkError
+	echo "Boot files ✔️"
 fi
+
+if [ "$path" != "" ]; then
+	sudo umount $path
+fi
+
+if [ "$path_ramdisk" != "" ]; then
+	sudo umount $path_ramdisk
+fi
+
+writeln "KERNEL BUILD DONE 👌😎"
+exit 0
