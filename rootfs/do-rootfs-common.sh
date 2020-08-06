@@ -2,99 +2,119 @@
 # use message utils
 . ./utils/fancyTerminalUtils.sh --source-only
 
+export ROOTFS_IMG_TIME=$(date +%s)
+
 # terminate message
 function checkError () {
-	checkErrorAndKill 'ERRORS DURING ROOTFS BUILD 😖❌'
+	checkErrorAndKill ' - ERRORS DURING ROOTFS BUILD 😖❌'
 }
 
 # create the template disk
 function createImg () {
-    writeln "Create IMG"
+    writeln 'Creating IMG'
+
+    IMAGE_FILE="$PWD/dist/$1/$1-seadog-$ROOTFS_IMG_TIME.img"
 
     # create the file
     mkdir -p dist/$1
-    rm dist/$1/$1-seadog.img
-    dd if=/dev/zero of=dist/$1/$1-seadog.img \
+
+    dd if=/dev/zero of=$IMAGE_FILE \
         bs=1024 count=600240 status=progress
 
     # partitions
-    sudo parted dist/$1/$1-seadog.img -s mktable msdos
-    sudo parted dist/$1/$1-seadog.img -s mkpart primary fat32 1 100 \
+    sudo parted $IMAGE_FILE -s mktable msdos
+    sudo parted $IMAGE_FILE -s mkpart primary fat32 1 100 \
         set 1 lba on align-check optimal 1 \
         mkpart primary ext4 101 500
 
     # format
-    sudo kpartx -a dist/$1/$1-seadog.img
-    sudo mkfs.vfat -F 32 /dev/mapper/loop0p1
-    sudo mkfs.ext4 /dev/mapper/loop0p2
-    sudo fatlabel /dev/mapper/loop0p1 'boot'
-    sudo e2label /dev/mapper/loop0p2 'seadog'
-    sudo kpartx -d dist/$1/$1-seadog.img
+    kpartxret="$(sudo kpartx -av $IMAGE_FILE)"
+    read PART_LOOP <<<$(grep -o 'loop.' <<<"$kpartxret")
+
+    sudo mkfs.vfat -F 32 /dev/mapper/${PART_LOOP}p1
+    sudo mkfs.ext4 /dev/mapper/${PART_LOOP}p2
+    sudo fatlabel /dev/mapper/${PART_LOOP}p1 'boot'
+    sudo e2label /dev/mapper/${PART_LOOP}p2 'seadog'
+    sudo kpartx -dv $IMAGE_FILE
+    sudo dmsetup remove /dev/mapper/${PART_LOOP}p1
+    sudo dmsetup remove /dev/mapper/${PART_LOOP}p2
+    sudo losetup -d /dev/${PART_LOOP}
 
     checkError
+    writeln '✅ IMG Created'
 }
 
 function mountImg () {
-    writeln "Mount IMG"
+    writeln 'Mountint IMG'
     
+    export IMAGE_FILE="$PWD/dist/$1/$1-seadog-$ROOTFS_IMG_TIME.img"
+
     # mount
-    sudo kpartx -a dist/$1/$1-seadog.img
-    sudo mount /dev/mapper/loop0p1 rootfs/mntfat
-    sudo mount /dev/mapper/loop0p2 rootfs/mntext
+    kpartxret="$(sudo kpartx -av $IMAGE_FILE)"
+    read PART_LOOP <<<$(grep -o 'loop.' <<<"$kpartxret")
+    export PART_LOOP
+
+    sudo mount /dev/mapper/${PART_LOOP}p1 rootfs/mntfat
+    sudo mount /dev/mapper/${PART_LOOP}p2 rootfs/mntext
 
     checkError
+    writeln '✅ IMG mounted'
 }
 
 function umountImg () {
-    writeln "Umount IMG"
+    writeln 'Umount IMG'
 
     # umount
-    sudo umount /dev/mapper/loop0p1 rootfs/mntfat
-    sudo umount /dev/mapper/loop0p2 rootfs/mntext
-    sudo kpartx -d dist/$1/$1-seadog.img
+    sudo umount rootfs/mntfat
+    sudo umount rootfs/mntext
+    sudo kpartx -dv $IMAGE_FILE
+    sudo dmsetup remove /dev/mapper/${PART_LOOP}p1
+    sudo dmsetup remove /dev/mapper/${PART_LOOP}p2
+    sudo losetup -d /dev/${PART_LOOP}
 
     checkError
+    writeln '✅ IMG umounted'
 }
 
 function doRootfsArm64 () {
-    writeln "Installing rootfs files"
+    writeln 'Installing rootfs files'
 
     # unpack
     sudo tar -xzf rootfs/alpine-minirootfs-3.12.0-aarch64.tar.gz \
         -C rootfs/mntext/
 
     checkError
-}
-
-function doRootfsCommon () {
-    writeln "nada"
+    writeln '✅ rootfs files installed'
 }
 
 function doBootfs () {
-    writeln "Installing boot files"
+    writenln 'Installing boot files'
 
     # copy specific resources
     sudo cp -r rootfs/$1/$2/boot/* rootfs/mntfat/
     
     # copy u-boot
-    writeln "Installing Bootloader"
+    writeln 'Installing Bootloader'
     sudo cp uboot/$1/artifacts/$2/u-boot.bin rootfs/mntfat/bootImg
     sudo cp uboot/$1/artifacts/$2/boot.scr.uimg rootfs/mntfat/
 
     # copy kernel
-    writeln "Installing Kernel"
+    writeln 'Installing Kernel'
     sudo cp kernel/$1/artifacts/$2/arch/$3/boot/Image rootfs/mntfat/
 
     # copy device tree
-    writeln "Installing Device Tree"
+    writeln 'Installing Device Tree'
     sudo cp \
         kernel/$1/artifacts/$2/arch/arm64/boot/dts/$4/$5 \
         rootfs/mntfat/
     
     checkError
+    writeln '✅ Boot Files installed'
 }
 
 function prepare () {
+    writeln 'Prepare mount point'
+
     # clear
     sudo rm -rf rootfs/mntfat
     sudo rm -rf rootfs/mntext
@@ -104,10 +124,28 @@ function prepare () {
     mkdir rootfs/mntfat
 
     checkError
+    writeln '✅ Mount points ok'
 }
 
-function finish () {
-    mv dist/$1/$1-seadog.img dist/$1/$1-seadog-$(date +%s).img
+function checkWSL () {
+    if [[ -z "${WSL_DISTRO_NAME}" ]]; then
+        echo 'we are not in WSL ...'
+    else
+        writeln '📦 WSL :: Copying dist to C:'
 
-    checkError
+        mv $IMAGE_FILE /mnt/c/Users/Public/
+    fi
+}
+
+function doRootFs () {
+    prepare
+    # create the img file and mount
+    createImg $hardware
+    mountImg $hardware
+    # install boot files and kernel
+    doBootfs $family $hardware $arch $vendor $dtb
+    # install base distro
+    doRootfsArm64 $hardware
+    umountImg $hardware
+    checkWSL
 }
