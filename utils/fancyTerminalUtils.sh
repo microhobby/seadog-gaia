@@ -15,10 +15,22 @@ function lastErrorCheck () {
 	fi
 }
 
+# kill the subshells on case of error
+function checkErrorAndKill () {
+	lst=$?
+	
+	if [ "$lst" -ne "0" ]; then
+		writelnError $@
+		sleep 1
+		
+		kill 0
+	fi
+}
+
 function writelnError () {
-	echo -e "${RED} $1 ${NC}"
+	echo -e "${RED} $@ ${NC}"
 }
 
 function writeln () {
-	echo -e "${GREEN} $1 ${NC}"
+	echo -e "${GREEN} $@ ${NC}"
 }
