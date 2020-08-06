@@ -88,7 +88,7 @@ function doRootfsArm64 () {
 }
 
 function doBootfs () {
-    writenln 'Installing boot files'
+    writeln 'Installing boot files'
 
     # copy specific resources
     sudo cp -r rootfs/$1/$2/boot/* rootfs/mntfat/
