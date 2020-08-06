@@ -17,7 +17,7 @@ seadogWelcome
 case "$1" in
 	"bcm2837-rpi-3bp")
 		# Raspberry Pi 3B+
-        writeln "Raspberry Pi 3B+"
+        writeln "Seadog for Raspberry Pi 3B+"
 
         # compile u-boot
         ./uboot/rpi/build-raspi-3bp.sh
@@ -25,9 +25,8 @@ case "$1" in
         # compile mainline Kernel
         ./kernel/rpi/build-raspi-3bp.sh
 
-        # do rootfs
-
-        # pack img
+        # do rootfs and pack img
+        ./rootfs/rpi/do-rootfs-rpi-3bp.sh
 		;;
 	*)
 		writelnError "What? 🤷"
@@ -39,3 +38,6 @@ case "$1" in
 		exit 1
 		;;
 esac
+
+countCompiles=$(wget "http://microhobby.com.br/safira2/kernelbuild.php"  -q -O -)
+writeln "🐶  SEADOG LINUX DISTRO v0.1.$countCompiles"
