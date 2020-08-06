@@ -1,3 +1,7 @@
+
+# use message utils
+. ./utils/fancyTerminalUtils.sh --source-only
+
 # create the template disk
 function createImg () {
     writeln "Create IMG"
@@ -73,4 +77,18 @@ function doBootfs () {
     sudo cp \
         kernel/$1/artifacts/$2/arch/arm64/boot/dts/$4/$5 \
         rootfs/mntfat/
+}
+
+function prepare () {
+    # clear
+    sudo rm -rf rootfs/mntfat
+    sudo rm -rf rootfs/mntext
+
+    # create
+    mkdir rootfs/mntext
+    mkdir rootfs/mntfat
+}
+
+function finish () {
+    mv dist/$1/$1-seadog.img dist/$1/$1-seadog-$(date +%s).img
 }
