@@ -5,6 +5,8 @@ BOLD='\033[1m'
 NORMAL='\033[2m'
 lastError=0
 
+export IMAGE_FILE=''
+
 # last error check
 function lastErrorCheck () {
 	lst=$?
@@ -23,6 +25,21 @@ function checkErrorAndKill () {
 		writelnError $@
 		sleep 1
 		
+		# clean the attempt
+		if [[ -z "$IMAGE_FILE" ]]; then
+			echo 'Nothing to clean ..'
+		else
+			echo 'Cleaning ...'
+
+			sudo umount rootfs/mntfat
+			sudo umount rootfs/mntext
+			sudo kpartx -dv $IMAGE_FILE
+			sudo dmsetup remove /dev/mapper/${PART_LOOP}p1
+			sudo dmsetup remove /dev/mapper/${PART_LOOP}p2
+			sudo losetup -d /dev/${PART_LOOP}
+			rm -rf $IMAGE_FILE
+		fi
+
 		kill 0
 	fi
 }
