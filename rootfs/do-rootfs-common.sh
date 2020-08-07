@@ -128,7 +128,7 @@ function prepare () {
 }
 
 function checkWSL () {
-    if [[ -z "${WSL_DISTRO_NAME}" ]]; then
+    if [[ -z "$WSL_DISTRO_NAME" ]]; then
         echo 'we are not in WSL ...'
     else
         writeln '📦 WSL :: Copying dist to C:'
