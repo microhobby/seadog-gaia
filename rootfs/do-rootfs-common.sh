@@ -104,9 +104,10 @@ function doBootfs () {
 
     # copy device tree
     writeln 'Installing Device Tree'
+    sudo mkdir -p rootfs/mntfat/$vendor
     sudo cp \
         kernel/$1/artifacts/$2/arch/arm64/boot/dts/$4/$5 \
-        rootfs/mntfat/
+        rootfs/mntfat/$vendor/$dtb
     
     checkError
     writeln '✅ Boot Files installed'
@@ -137,6 +138,98 @@ function checkWSL () {
     fi
 }
 
+function mountImgChroot () {
+    writeln 'Mountint IMG'
+    
+    export IMAGE_FILE="$1"
+
+    # mount
+    kpartxret="$(sudo kpartx -av $IMAGE_FILE)"
+    read PART_LOOP <<<$(grep -o 'loop.' <<<"$kpartxret")
+    export PART_LOOP
+
+    sudo mount /dev/mapper/${PART_LOOP}p1 rootfs/mntfat
+    sudo mount /dev/mapper/${PART_LOOP}p2 rootfs/mntext
+
+    checkError
+    writeln '✅ IMG mounted'
+}
+
+function doModulesInstall () {
+    writeln 'Installing Kernel Modules'
+
+    path=$2
+    export CDCD=1
+
+    # go to Linux source folder
+    artifacts="../seadog-gaia/kernel/$artifacts"
+    cd $kernel_src
+
+    # install modules .ko
+    sudo make O=$artifacts INSTALL_MOD_PATH=$path modules_install
+	checkError
+    
+    # install the headers for compile reference (not needed for now)
+    #sudo make O=$artifacts ARCH=arm64 INSTALL_HDR_PATH=$path/usr headers_install
+    #checkError
+
+    cd -
+    unset CDCD
+
+    writeln '✅ Kernel Modules'
+}
+
+function doChrootBase () {
+    export chroot_dir=$1
+
+    # mount the sysfs
+    sudo mount /dev/ ${chroot_dir}/dev/ --bind
+    sudo mount -o remount,ro,bind ${chroot_dir}/dev
+    sudo mount -t proc none ${chroot_dir}/proc
+    sudo mount -o bind /sys ${chroot_dir}/sys
+    sudo mkdir -p ${chroot_dir}/root
+
+    # set .bashrc for all users including root
+    sudo cp rootfs/common/.bashrc ${chroot_dir}/etc/bash.bashrc
+
+    # run bash.bashrc on profile 
+    sudo cp rootfs/common/profile ${chroot_dir}/etc/profile
+
+    # the welcome message Seadog char logo
+    sudo cp rootfs/common/issue ${chroot_dir}/etc/issue
+
+    # customize the distro name and version
+    sudo cp rootfs/common/os-release ${chroot_dir}/etc/os-release
+
+    # add the serial as login tty
+    sudo cp rootfs/common/inittab ${chroot_dir}/etc/inittab
+    
+    # add the network eth0 with dhcp
+    sudo cp rootfs/common/interfaces ${chroot_dir}/etc/network/interfaces
+
+    # Nothing on login message
+    sudo bash -c "echo '' > ${chroot_dir}/etc/motd"
+
+    # copy the prepare script to the rootfs
+    sudo cp rootfs/common/prepare ${chroot_dir}/bin/
+    # run the script that will install the base tools and init services
+    sudo chroot ${chroot_dir}/ /bin/prepare
+
+    # test
+    #sudo chroot ${chroot_dir}/
+
+    # Add the hardware name used on script as hostname
+    sudo bash -c "echo $hardware > ${chroot_dir}/etc/hostname"
+
+    # add the docker registry for podman
+    sudo cp rootfs/common/registries.conf ${chroot_dir}/etc/containers/registries.conf
+
+    # umount
+    sudo umount ${chroot_dir}/dev/
+    sudo umount ${chroot_dir}/proc/
+    sudo umount ${chroot_dir}/sys/ 
+}
+
 function doRootFs () {
     prepare
     # create the img file and mount
@@ -146,6 +239,8 @@ function doRootFs () {
     doBootfs $family $hardware $arch $vendor $dtb
     # install base distro
     doRootfsArm64 $hardware
+    doModulesInstall $artifacts "$PWD/rootfs/mntext"
+    doChrootBase "$PWD/rootfs/mntext" $hardware
     umountImg $hardware
     checkWSL
 }
