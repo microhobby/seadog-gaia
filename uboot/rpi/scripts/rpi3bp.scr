@@ -1,5 +1,3 @@
-#setenv mmcblk "/dev/mmcblk0p2"
-#setenv boot_file zImage
 setenv fdtfile bcm2837-rpi-3-b-plus.dtb
 
 if printenv mmcblk
@@ -23,8 +21,7 @@ if printenv console
         echo 'console seted'
     else
         echo 'console not found, setting default console cmdline'
-        #setenv console 'ignore_loglevel earlycon console=tty1 console=serial0,115200 earlyprintk'
-        setenv console 'ignore_loglevel earlycon'
+        setenv console 'console=ttyS0,115200 8250.nr_uarts=1'
 fi
 
 mmc dev 0
