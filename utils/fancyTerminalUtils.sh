@@ -31,6 +31,13 @@ function checkErrorAndKill () {
 		else
 			echo 'Cleaning ...'
 
+			if [[ -z "$CDCD" ]]; then
+				echo "PATH ok"
+			else
+				echo "Returning to root folder ..."
+				cd -
+			fi
+
 			sudo umount rootfs/mntfat
 			sudo umount rootfs/mntext
 			sudo kpartx -dv $IMAGE_FILE
