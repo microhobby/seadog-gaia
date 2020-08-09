@@ -1,4 +1,3 @@
-setenv fdtfile bcm2837-rpi-3-b-plus.dtb
 
 if printenv mmcblk
     then
