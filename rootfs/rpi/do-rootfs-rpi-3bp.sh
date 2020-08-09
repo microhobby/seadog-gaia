@@ -3,6 +3,8 @@
 # use the common functions
 . ./rootfs/do-rootfs-common.sh --source-only
 
+export artifacts="./rpi/artifacts/bcm2837-rpi-3bp"
+export kernel_src="../linux"
 export hardware='bcm2837-rpi-3bp'
 export family='rpi'
 export arch='arm64'
