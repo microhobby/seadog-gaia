@@ -1,3 +1,4 @@
+# script for bcm2837-rpi-3bp
 
 if printenv mmcblk
     then
@@ -23,8 +24,16 @@ if printenv console
         setenv console 'console=ttyS0,115200 8250.nr_uarts=1'
 fi
 
+if printenv debug
+    then
+        echo 'kernel debug seted'
+        setenv debug_cmd 'ignore_loglevel earlycon initcall_debug earlyprintk'
+    else
+        setenv debug_cmd 'quiet'
+fi
+
 mmc dev 0
-setenv bootargs ${console} root=${mmcblk} ${init_program} rootfstype=ext4 rootwait logo.nologo
+setenv bootargs ${console} ${debug_cmd} root=${mmcblk} ${init_program} rootfstype=ext4 rootwait logo.nologo
 fatload mmc 0:1 ${kernel_addr_r} ${boot_file}
 fatload mmc 0:1 ${fdt_addr_r} ${fdtfile}
 booti ${kernel_addr_r} - ${fdt_addr_r}
