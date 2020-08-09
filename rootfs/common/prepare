@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# add dns
+echo -e 'nameserver 8.8.8.8\nnameserver 2620:0:ccc::2' > /etc/resolv.conf
+#hostname -F /etc/hostname
+
+# add testing
+echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" \
+        >> /etc/apk/repositories
+
+echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" \
+        >> /etc/apk/repositories
+
+echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" \
+        >> /etc/apk/repositories
+
+# install deps
+apk update
+apk add sudo \
+        bash \
+        bash-completion \
+        busybox-initscripts \
+        openrc \
+        nano \
+        neofetch \
+        podman \
+        htop \
+        e2fsprogs-extra \
+        findmnt
+
+# add user
+adduser -D seadog
+passwd seadog -d catioro
+
+# add seadog on sudo
+adduser seadog wheel
+sed -i '/%wheel/s/^# //' /etc/sudoers
+
+# add init services
+rc-update add devfs sysinit
+rc-update add dmesg sysinit
+rc-update add mdev sysinit
+
+rc-update add swclock boot
+rc-update add ntpd boot
+rc-update add modules boot
+rc-update add sysctl boot
+rc-update add hostname boot
+rc-update add bootmisc boot
+rc-update add syslog boot
+rc-update add sysfs boot
+rc-update add cgroups boot
+rc-update add networking boot
+
+rc-update add mount-ro shutdown
+rc-update add killprocs shutdown
+rc-update add savecache shutdown
