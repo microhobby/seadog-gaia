@@ -1,0 +1,4 @@
+NAME="Seadog Linux"
+ID=alpine
+VERSION_ID=0.0.1
+PRETTY_NAME="Seadog Linux v0.0.1"
