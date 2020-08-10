@@ -210,6 +210,18 @@ function doChrootBase () {
     # Nothing on login message
     sudo bash -c "echo '' > ${chroot_dir}/etc/motd"
 
+    # Add the mapping for te uboot-tools
+    sudo cp rootfs/common/fw_env.config ${chroot_dir}/etc/fw_env.config
+
+    # Add the fstab for auto mount the /boot
+    sudo cp rootfs/common/fstab ${chroot_dir}/etc/fstab
+
+    # Add the seadog-expand service
+    sudo cp rootfs/common/seadog-expand ${chroot_dir}/etc/init.d/seadog-expand
+
+    # the welcome message for the first boot
+    sudo cp rootfs/common/welcome ${chroot_dir}/etc/welcome
+
     # copy the prepare script to the rootfs
     sudo cp rootfs/common/prepare ${chroot_dir}/bin/
     # run the script that will install the base tools and init services

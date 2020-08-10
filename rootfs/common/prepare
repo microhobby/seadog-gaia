@@ -26,7 +26,9 @@ apk add sudo \
         podman \
         htop \
         e2fsprogs-extra \
-        findmnt
+        findmnt \
+        parted \
+        uboot-tools
 
 # add user
 adduser -D seadog
@@ -51,6 +53,7 @@ rc-update add syslog boot
 rc-update add sysfs boot
 rc-update add cgroups boot
 rc-update add networking boot
+rc-update add seadog-expand boot
 
 rc-update add mount-ro shutdown
 rc-update add killprocs shutdown

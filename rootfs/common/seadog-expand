@@ -1,0 +1,80 @@
+#!/sbin/openrc-run
+# Copyright (c) 2020 Seadog Linux
+# The Seadog Linux licenses this file to you under the MIT license.
+# See the LICENSE file in the project root for more information.
+
+description="Seadog Expand SD Card rootfs partition utility"
+#command="/bin/expand-dog"
+#command_args_foreground="${agetty_options} ${port} ${baud} ${term_type}"
+
+depend() {
+	need net
+}
+
+start() {
+    ebegin "Checking if the dog needs to be expanded"
+
+    # check if the parted is ok
+    SEADOG_PART_NEW_SIZE=$(cat /proc/cmdline | awk -v RS=" " '/^seadog.partnewsize=/ {print substr($0,20)}')
+    # check if the expand is ok
+    SEADOG_EXPAND=$(cat /proc/cmdline | awk -v RS=" " '/^seadog.expand=/ {print substr($0,15)}')
+
+    echo "seadog.partnewsize=$SEADOG_PART_NEW_SIZE" > /dev/console
+    echo "seadog.expand=$SEADOG_EXPAND" > /dev/console
+
+    if [[ "$SEADOG_PART_NEW_SIZE" == "0" ]]; then
+        echo 'Setting new Seadog rootfs size ...' > /dev/console
+
+        cat /etc/welcome > /dev/console
+        sleep 1
+        echo "====================== THANK YOU FOR USE SEADOG LINUX ==========================" > /dev/console
+        sleep 1
+        echo "===================== WE NEED TO CONFIGURE YOUR SDCARD =========================" > /dev/console
+        sleep 1
+        echo "================= YOUR BOARD WILL REBOOT AFTER CONFIGURATION ===================" > /dev/console
+        sleep 1
+
+        PART_START=$(parted /dev/mmcblk0 -ms unit s p | grep "^2" | cut -f 2 -d:)
+        [ "$PART_START" ] || eend 1
+
+        fdisk /dev/mmcblk0 <<EOF
+p
+d
+2
+n
+p
+2
+$PART_START
+
+p
+w
+EOF
+
+        if [ "$?" -ne "0" ]; then
+            eerror "Error trying expand the rootfs partition!"
+            eend 1
+        fi
+
+        # set that all are ok and reboot
+        fw_setenv seadog_part_new_size 1
+        echo "======================== THANK YOU FOR THE PATIENCE ============================" > /dev/console
+        sleep 1
+        reboot now
+    else
+        if [[ "$SEADOG_EXPAND" == "0" ]]; then
+            echo 'Expanding new Seadog rootfs size ...' > /dev/console
+            
+            resize2fs /dev/mmcblk0p2
+
+            if [ "$?" -ne "0" ]; then
+                eerror "Error trying to resize the rootfs partition!"
+                eend 1
+            fi
+
+            # all ok let's use
+            fw_setenv seadog_expand 1
+        fi
+    fi
+
+    eend $?
+}
