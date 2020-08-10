@@ -1,5 +1,25 @@
 # script for bcm2837-rpi-3bp
 
+# For Linux use
+if printenv seadog_part_new_size
+    then
+        echo 'SEADOG_PART_NEW_SIZE seted'
+    else
+        echo 'SEADOG_PART_NEW_SIZE setting to 0'
+        setenv seadog_part_new_size 0
+fi
+
+if printenv seadog_expand
+    then
+        echo 'SEADOG_EXPAND seted'
+    else
+        echo 'SEADOG_EXPAND setting to 0'
+        setenv seadog_expand 0
+fi
+
+# we need the invironment for Linux
+saveenv
+
 if printenv mmcblk
     then
         echo 'mmc block seted'
@@ -33,7 +53,18 @@ if printenv debug
 fi
 
 mmc dev 0
-setenv bootargs ${console} ${debug_cmd} root=${mmcblk} ${init_program} rootfstype=ext4 rootwait logo.nologo
+
+setenv bootargs ${console}
+setenv bootargs ${bootargs} ${debug_cmd}
+setenv bootargs ${bootargs} root=${mmcblk}
+setenv bootargs ${bootargs} ${init_program}
+setenv bootargs ${bootargs} rootfstype=ext4
+setenv bootargs ${bootargs} rootwait
+setenv bootargs ${bootargs} logo.nologo
+setenv bootargs ${bootargs} TERM=xterm-256color
+setenv bootargs ${bootargs} seadog.partnewsize=${seadog_part_new_size}
+setenv bootargs ${bootargs} seadog.expand=${seadog_expand}
+
 fatload mmc 0:1 ${kernel_addr_r} ${boot_file}
 fatload mmc 0:1 ${fdt_addr_r} ${fdtfile}
 booti ${kernel_addr_r} - ${fdt_addr_r}
