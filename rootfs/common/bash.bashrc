@@ -116,6 +116,5 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export TERM=xterm-256color
 export PS1="\[\033[1;48;5;15;38;5;17m\]🐶 \u \[\033[0;32m\]\[\033[1;38;5;34m\]@\h\[\033[0;32m\]\[\033[1;38;5;111m\]\w\[\033[0m\]: "
 alias docker='sudo podman'
