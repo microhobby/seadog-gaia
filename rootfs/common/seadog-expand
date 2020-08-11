@@ -50,11 +50,6 @@ p
 w
 EOF
 
-        if [ "$?" -ne "0" ]; then
-            eerror "Error trying expand the rootfs partition!"
-            eend 1
-        fi
-
         # set that all are ok and reboot
         fw_setenv seadog_part_new_size 1
         echo "======================== THANK YOU FOR THE PATIENCE ============================" > /dev/console
