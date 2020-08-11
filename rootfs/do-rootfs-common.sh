@@ -233,6 +233,9 @@ function doChrootBase () {
     # Add the hardware name used on script as hostname
     sudo bash -c "echo $hardware > ${chroot_dir}/etc/hostname"
 
+    # Update the neofetch for Seadog Linux
+    sudo cp rootfs/common/neofetch ${chroot_dir}/usr/bin/neofetch
+
     # add the docker registry for podman
     sudo cp rootfs/common/registries.conf ${chroot_dir}/etc/containers/registries.conf
 
