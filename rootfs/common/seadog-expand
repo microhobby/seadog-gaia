@@ -26,13 +26,13 @@ start() {
         echo 'Setting new Seadog rootfs size ...' > /dev/console
 
         cat /etc/welcome > /dev/console
-        sleep 1
+        sleep 2
         echo "====================== THANK YOU FOR USE SEADOG LINUX ==========================" > /dev/console
-        sleep 1
+        sleep 2
         echo "===================== WE NEED TO CONFIGURE YOUR SDCARD =========================" > /dev/console
-        sleep 1
+        sleep 2
         echo "================= YOUR BOARD WILL REBOOT AFTER CONFIGURATION ===================" > /dev/console
-        sleep 1
+        sleep 4
 
         PART_START=$(parted /dev/mmcblk0 -ms unit s p | grep "^2" | cut -f 2 -d:)
         [ "$PART_START" ] || eend 1
@@ -58,7 +58,7 @@ EOF
         # set that all are ok and reboot
         fw_setenv seadog_part_new_size 1
         echo "======================== THANK YOU FOR THE PATIENCE ============================" > /dev/console
-        sleep 1
+        sleep 5
         reboot now
     else
         if [[ "$SEADOG_EXPAND" == "0" ]]; then
