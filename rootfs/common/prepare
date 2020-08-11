@@ -32,7 +32,7 @@ apk add sudo \
 
 # add user
 adduser -D seadog
-passwd seadog -d catioro
+echo -e "seadog\nseadog" | passwd seadog
 
 # add seadog on sudo
 adduser seadog wheel
