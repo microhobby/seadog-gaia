@@ -68,6 +68,10 @@ EOF
 
             # all ok let's use
             fw_setenv seadog_expand 1
+
+            # well let's reuse this for start the sshd
+            rc-update add sshd
+            /etc/init.d/sshd start
         fi
     fi
 

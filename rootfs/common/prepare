@@ -28,7 +28,8 @@ apk add sudo \
         e2fsprogs-extra \
         findmnt \
         parted \
-        uboot-tools
+        uboot-tools \
+        openssh
 
 # add user
 adduser -D seadog
