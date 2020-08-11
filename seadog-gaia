@@ -11,7 +11,7 @@ export CLEAN="$2"
 export arg=""
 
 # welcome
-seadogWelcome
+seadogWelcomeColor
 
 # check the arguments
 case "$1" in

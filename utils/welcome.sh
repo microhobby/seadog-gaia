@@ -114,3 +114,9 @@ function seadogMiniWelcome () {
 
     sleep 10s
 }
+
+function seadogWelcomeColor () {
+    cat ./rootfs/common/welcome
+
+    sleep 2s
+}
