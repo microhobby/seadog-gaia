@@ -1,0 +1,5 @@
+NAME="Seadog Linux"
+ID=alpine
+VERSION_CODENAME={{codename}}
+VERSION_ID={{v1}}.{{v2}}.{{v3}}
+PRETTY_NAME="Seadog Linux v{{v1}}.{{v2}}.{{v3}}"
