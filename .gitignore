@@ -1,2 +1,4 @@
 kernel/rpi/artifacts/
 uboot/rpi/artifacts/
+rootfs/mntext/
+rootfs/mntfat/
