@@ -13,7 +13,7 @@ function checkError () {
 function createImg () {
     writeln 'Creating IMG'
 
-    IMAGE_FILE="$PWD/dist/$1/$1-seadog-$ROOTFS_IMG_TIME.img"
+    export IMAGE_FILE="$PWD/dist/$1/$1-seadog-v${SEADOG_MAJOR_VERSION}.${SEADOG_MINOR_VERSION}.${SEADOG_BUILD_VERSION}.img"
 
     # create the file
     mkdir -p dist/$1
@@ -46,8 +46,6 @@ function createImg () {
 
 function mountImg () {
     writeln 'Mountint IMG'
-    
-    export IMAGE_FILE="$PWD/dist/$1/$1-seadog-$ROOTFS_IMG_TIME.img"
 
     # mount
     kpartxret="$(sudo kpartx -av $IMAGE_FILE)"
