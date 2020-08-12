@@ -19,6 +19,8 @@ apk update
 apk add sudo \
         bash \
         bash-completion \
+        util-linux \
+        util-linux-bash-completion \
         busybox-initscripts \
         openrc \
         nano \
