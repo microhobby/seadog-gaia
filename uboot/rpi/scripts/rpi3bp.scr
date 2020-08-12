@@ -44,6 +44,13 @@ if printenv console
         setenv console 'console=ttyS0,115200 8250.nr_uarts=1'
 fi
 
+if printenv loglevel
+    then
+        echo 'kernel loglevel seted'
+    else
+        setenv loglevel 4
+fi
+
 if printenv debug
     then
         echo 'kernel debug seted'
@@ -60,6 +67,7 @@ setenv bootargs ${bootargs} root=${mmcblk}
 setenv bootargs ${bootargs} ${init_program}
 setenv bootargs ${bootargs} rootfstype=ext4
 setenv bootargs ${bootargs} rootwait
+setenv bootargs ${bootargs} loglevel=${loglevel}
 setenv bootargs ${bootargs} logo.nologo
 setenv bootargs ${bootargs} TERM=xterm-256color
 setenv bootargs ${bootargs} seadog.partnewsize=${seadog_part_new_size}
