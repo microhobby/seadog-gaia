@@ -34,7 +34,7 @@ start() {
         echo "================= YOUR BOARD WILL REBOOT AFTER CONFIGURATION ===================" > /dev/console
         sleep 4
 
-        PART_START=$(parted /dev/mmcblk0 -ms unit s p | grep "^2" | cut -f 2 -d:)
+        PART_START=$(parted /dev/mmcblk0 -ms unit s p | grep "^2" | cut -f 2 -d: | cut -f 1 -ds)
         [ "$PART_START" ] || eend 1
 
         fdisk /dev/mmcblk0 <<EOF
