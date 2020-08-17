@@ -201,6 +201,9 @@ function doChrootBase () {
 
     # add the serial as login tty
     sudo cp rootfs/common/inittab ${chroot_dir}/etc/inittab
+
+    # add 10s timeout for kernel panic reboot
+    sudo cp rootfs/common/sysctl.conf ${chroot_dir}/etc/sysctl.conf
     
     # add the network eth0 with dhcp
     sudo cp rootfs/common/interfaces ${chroot_dir}/etc/network/interfaces
