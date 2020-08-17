@@ -63,6 +63,7 @@ rc-update add sysfs boot
 rc-update add cgroups boot
 rc-update add networking boot
 rc-update add seadog-expand boot
+rc-update add splash-boot boot
 
 rc-update add mount-ro shutdown
 rc-update add killprocs shutdown

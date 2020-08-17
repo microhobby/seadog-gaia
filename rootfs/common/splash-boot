@@ -1,0 +1,23 @@
+#!/sbin/openrc-run
+# Copyright (c) 2020 Seadog Linux
+# The Seadog Linux licenses this file to you under the MIT license.
+# See the LICENSE file in the project root for more information.
+
+description="Seadog Expand SD Card rootfs partition utility"
+
+depend() {
+	before net
+}
+
+start() {
+    ebegin "Splash Screen"
+
+    fbsplash -s /etc/boot1.ppm
+    sleep 0.5
+    fbsplash -s /etc/boot2.ppm
+    sleep 0.5
+    fbsplash -s /etc/boot1.ppm
+    sleep 0.5
+
+    eend $?
+}

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+fbsplash -s /etc/boot1.ppm

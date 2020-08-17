@@ -1,6 +1,7 @@
 # /etc/inittab
 
 ::sysinit:/usr/bin/resize
+::sysinit:/usr/bin/splash
 ::sysinit:/sbin/openrc sysinit
 ::sysinit:/sbin/openrc boot
 ::wait:/sbin/openrc default

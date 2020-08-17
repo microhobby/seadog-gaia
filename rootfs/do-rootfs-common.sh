@@ -223,6 +223,14 @@ function doChrootBase () {
     # the welcome message for the first boot
     sudo cp rootfs/common/welcome ${chroot_dir}/etc/welcome
 
+    # splash screen images
+    sudo cp rootfs/common/boot1.ppm ${chroot_dir}/etc/boot1.ppm
+    sudo cp rootfs/common/boot2.ppm ${chroot_dir}/etc/boot2.ppm
+
+    # splash screen scripts
+    sudo cp rootfs/common/splash ${chroot_dir}/usr/bin/splash
+    sudo cp rootfs/common/splash-boot ${chroot_dir}/etc/init.d/splash-boot
+
     # copy the prepare script to the rootfs
     sudo cp rootfs/common/prepare ${chroot_dir}/bin/
     # run the script that will install the base tools and init services
