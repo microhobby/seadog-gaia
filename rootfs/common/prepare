@@ -31,6 +31,9 @@ apk add sudo \
         findmnt \
         parted \
         uboot-tools \
+        dbus \
+        udev \
+        eudev \
         openssh
 
 # add user
@@ -44,7 +47,10 @@ sed -i '/%wheel/s/^# //' /etc/sudoers
 # add init services
 rc-update add devfs sysinit
 rc-update add dmesg sysinit
-rc-update add mdev sysinit
+rc-update add dbus sysinit
+rc-update add udev sysinit
+rc-update add udev-trigger sysinit
+rc-update add udev-settle sysinit
 
 rc-update add swclock boot
 rc-update add ntpd boot
