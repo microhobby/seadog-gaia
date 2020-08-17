@@ -1,4 +1,7 @@
+.vscode/
 kernel/rpi/artifacts/
 uboot/rpi/artifacts/
 rootfs/mntext/
 rootfs/mntfat/
+os-release
+bcm2837_rpi_3bp_defconfig
