@@ -1,0 +1,61 @@
+#!/bin/busybox sh
+
+/bin/busybox --install -s
+
+/bin/busybox ln -s /bin/busybox /bin/clear
+
+mount -t devtmpfs  devtmpfs  /dev
+mount -t proc      proc      /proc
+mount -t sysfs     sysfs     /sys
+mount -t tmpfs     tmpfs     /tmp
+
+echo 0 > /proc/sys/kernel/printk
+clear
+
+echo "
+                                 ''.-:////:-.''                                 
+                           '-/syhdysso+//+osshdhyo/.'                           
+                      '-+shhs+-.       '        .:oyhhs/-'                      
+                 ':+ydhs+-'          .hdds           .-+yhhs/-'                 
+             '/ydhs/.'               .ddmh                '-+yhdy:'             
+            /ms.                      .dy'                      -hd-            
+           .M/                       /dNNh-                       yd'           
+           .M/                   '-   'hy   '.                    ym'           
+            sm.                  .hm- 'hy  :Ns'                  :N/            
+            'my                   'Ns''hy .dd                    my             
+             :M:                   'ohdNNdh/'                   sm.             
+              sd.                     '+/                      :N/              
+              'Ndyssssssssssssssssssyssssssyssssssssssssyo'  :smh               
+               hm........................................'   '-N+               
+               hN:::::::::::::::::::::::::::::::::::::::::::::/N+               
+              :MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm'              
+              sMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM-              
+              'dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMs               
+               '/mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy-                
+                .mMMdNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMmNMN/                 
+               'hMM+ dMMdhmNMMMMMMMMMMMMMMMMMMMMMMMMNmhMMM..MMN.                
+               /NMd' hMM/   -/+sssyhmmmmmmmdhysys+:.  'MMN' oMMs                
+               +MMy  sMMo   .mMm'              yMM-   -MMh' /MMd                
+               yMM:  -MMm   '/++               :++'   yMMo  .mMm.               
+               MMM.  'hMM+                           -NMN.   dMN:               
+              'MMm'   -NMm-                         'hMM+    yMM+               
+              +MMs     +MMd'                        sMMy'    :MMy               
+              yMM+      oMMy'       '-----.        +MMd      .MMM               
+             -NMN'       hMMo     .hNMMMMMNd/     :NMm-       yMM+              
+             yMMo        .dMN/   .mMNo:--/mMM/   .NMN:        :NMd.             
+            /NMd'         -MMN   -MMN.   'yMMs   yMMo          sMMs             
+           'dMM-          .MMM    +NMMhohNMMh    yMM+          .dMN:            
+           :MMd           'hMM/    .+hMMMmo-    -mMN.           oMMs            
+           +MMo            .dMMh/--:+dMMMNo:--:sNMN/            -MMy'           
+           /MMs             'oMMMMMMMMh+yNMMMMMMMd.             :MMy            
+           .mMM:            .dMMs///-'    .://+NMM-            .dMN/            
+            -mMNs.        '/mMMs               :NMNo'        '/mMNo             
+             .sNMNho/--:+ymMMd:                 .yMMNho:--:+ymMMh-              
+               .+hNMMMMMMNds-                     .+hNMMMMMMNdo-                
+                   '.-:-.'                           ''.::-''                   
+
+====================== Seadog Captain in Emergency Mode ========================
+
+"
+
+sh +m

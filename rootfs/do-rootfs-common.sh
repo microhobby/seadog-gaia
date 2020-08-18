@@ -100,6 +100,9 @@ function doBootfs () {
     writeln 'Installing Kernel'
     sudo cp kernel/$1/artifacts/$2/arch/$3/boot/Image rootfs/mntfat/
 
+    # copy emerg initrd
+    sudo cp initrd/common/emerg.img rootfs/mntfat/
+
     # copy device tree
     writeln 'Installing Device Tree'
     sudo mkdir -p rootfs/mntfat/$vendor

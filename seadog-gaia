@@ -45,6 +45,9 @@ case "$1" in
         # compile mainline Kernel
         ./kernel/rpi/build-raspi-3bp.sh
 
+        # compile initrd
+        ./initrd/do-initrd-common.sh
+
         # do rootfs and pack img
         ./rootfs/rpi/do-rootfs-rpi-3bp.sh
 		;;
