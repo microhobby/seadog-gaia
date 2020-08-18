@@ -1,0 +1,18 @@
+#!/sbin/openrc-run
+# Copyright (c) 2020 Seadog Linux
+# The Seadog Linux licenses this file to you under the MIT license.
+# See the LICENSE file in the project root for more information.
+
+description="Seadog Check if the system is stable for 10 minutes"
+
+depend() {
+	before net
+}
+
+start() {
+    ebegin "Seadog Captain is checking the boot ..."
+
+    /usr/bin/all-ok &
+
+    eend $?
+}

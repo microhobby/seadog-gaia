@@ -234,6 +234,10 @@ function doChrootBase () {
     sudo cp rootfs/common/splash ${chroot_dir}/usr/bin/splash
     sudo cp rootfs/common/splash-boot ${chroot_dir}/etc/init.d/splash-boot
 
+    # boot count emergency mode
+    sudo cp rootfs/common/all-ok ${chroot_dir}/usr/bin/all-ok
+    sudo cp rootfs/common/boot-ok ${chroot_dir}/etc/init.d/boot-ok
+
     # copy the prepare script to the rootfs
     sudo cp rootfs/common/prepare ${chroot_dir}/bin/
     # run the script that will install the base tools and init services

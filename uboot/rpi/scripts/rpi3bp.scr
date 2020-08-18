@@ -17,6 +17,25 @@ if printenv seadog_expand
         setenv seadog_expand 0
 fi
 
+if printenv boot_count
+    then
+        echo 'boot.count seted'
+
+        # add 1
+        setexpr boot_count ${boot_count} + 1
+
+        if test 4 = ${boot_count}
+            then
+                echo 'boot.count explode setting emerg mode ...'
+                setenv emerg 1
+                setenv boot_count
+        fi
+    else
+        echo 'first boot'
+        setenv boot_count 0
+        setenv emerg
+fi
+
 # we need the invironment for Linux
 saveenv
 
@@ -72,6 +91,7 @@ setenv bootargs ${bootargs} logo.nologo
 setenv bootargs ${bootargs} TERM=xterm-256color
 setenv bootargs ${bootargs} seadog.partnewsize=${seadog_part_new_size}
 setenv bootargs ${bootargs} seadog.expand=${seadog_expand}
+setenv bootargs ${bootargs} boot.count=${boot_count}
 
 fatload mmc 0:1 ${kernel_addr_r} ${boot_file}
 fatload mmc 0:1 ${fdt_addr_r} ${fdtfile}

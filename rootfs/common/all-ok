@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sleep 10m
+fw_setenv boot_count 0
