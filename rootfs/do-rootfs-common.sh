@@ -23,9 +23,9 @@ function createImg () {
 
     # partitions
     sudo parted $IMAGE_FILE -s mktable msdos
-    sudo parted $IMAGE_FILE -s mkpart primary fat32 1 100 \
+    sudo parted $IMAGE_FILE -s mkpart primary fat32 1 50 \
         set 1 lba on align-check optimal 1 \
-        mkpart primary ext4 101 500
+        mkpart primary ext4 51 370
 
     # format
     kpartxret="$(sudo kpartx -av $IMAGE_FILE)"
