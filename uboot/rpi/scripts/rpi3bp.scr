@@ -78,6 +78,13 @@ if printenv debug
         setenv debug_cmd 'quiet'
 fi
 
+# this will enable the kdump
+if printenv crashkernel
+    then
+        echo 'crashkernel seted'
+        setenv crashkernel crashkernel=${crashkernel}M
+fi
+
 mmc dev 0
 
 setenv bootargs ${console}
@@ -92,6 +99,7 @@ setenv bootargs ${bootargs} TERM=xterm-256color
 setenv bootargs ${bootargs} seadog.partnewsize=${seadog_part_new_size}
 setenv bootargs ${bootargs} seadog.expand=${seadog_expand}
 setenv bootargs ${bootargs} boot.count=${boot_count}
+setenv bootargs ${bootargs} irqchip.gicv3_nolpi=1 ${crashkernel}
 
 fatload mmc 0:1 ${kernel_addr_r} ${boot_file}
 fatload mmc 0:1 ${fdt_addr_r} ${fdtfile}

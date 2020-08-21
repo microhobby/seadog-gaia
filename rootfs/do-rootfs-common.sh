@@ -238,6 +238,16 @@ function doChrootBase () {
     sudo cp rootfs/common/all-ok ${chroot_dir}/usr/bin/all-ok
     sudo cp rootfs/common/boot-ok ${chroot_dir}/etc/init.d/boot-ok
 
+    # image to show during the kdump
+    sudo cp rootfs/common/bsod.jpg ${chroot_dir}/etc/bsod.jpg
+
+    # service to check seadog.kdump
+    sudo cp rootfs/common/init-emerg ${chroot_dir}/sbin/init-emerg
+
+    # kexec service with specific cmdline
+    sudo cp rootfs/$family/$hardware/custom/kexec \
+        ${chroot_dir}/etc/init.d/kexec
+
     # copy the prepare script to the rootfs
     sudo cp rootfs/common/prepare ${chroot_dir}/bin/
     # run the script that will install the base tools and init services
