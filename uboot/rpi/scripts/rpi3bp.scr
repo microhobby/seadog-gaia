@@ -85,6 +85,13 @@ if printenv crashkernel
         setenv crashkernel crashkernel=${crashkernel}M
 fi
 
+# this will force emergency mode
+if printenv emergency
+    then
+        echo 'Force Emergency mode seted'
+        setenv emerg 1
+fi
+
 mmc dev 0
 
 setenv bootargs ${console}
