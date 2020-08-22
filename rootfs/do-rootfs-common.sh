@@ -223,6 +223,19 @@ function doChrootBase () {
     # Add the seadog-expand service
     sudo cp rootfs/common/seadog-expand ${chroot_dir}/etc/init.d/seadog-expand
 
+    # Add images for the seadog expand wait
+    sudo cp rootfs/common/seadog-expand1.jpg \
+        ${chroot_dir}/etc/seadog-expand1.jpg
+    
+    sudo cp rootfs/common/seadog-expand2.jpg \
+        ${chroot_dir}/etc/seadog-expand2.jpg
+
+    sudo cp rootfs/common/seadog-expand3.jpg \
+        ${chroot_dir}/etc/seadog-expand3.jpg
+    
+    sudo cp rootfs/common/seadog-expand4.jpg \
+        ${chroot_dir}/etc/seadog-expand4.jpg
+
     # the welcome message for the first boot
     sudo cp rootfs/common/welcome ${chroot_dir}/etc/welcome
 

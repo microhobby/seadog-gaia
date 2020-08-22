@@ -28,10 +28,13 @@ start() {
         cat /etc/welcome > /dev/console
         sleep 2
         echo "====================== THANK YOU FOR USE SEADOG LINUX ==========================" > /dev/console
+        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand1.jpg
         sleep 2
         echo "===================== WE NEED TO CONFIGURE YOUR SDCARD =========================" > /dev/console
+        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand2.jpg
         sleep 2
         echo "================= YOUR BOARD WILL REBOOT AFTER CONFIGURATION ===================" > /dev/console
+        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand3.jpg
         sleep 4
 
         PART_START=$(parted /dev/mmcblk0 -ms unit s p | grep "^2" | cut -f 2 -d: | cut -f 1 -ds)
@@ -53,6 +56,7 @@ EOF
         # set that all are ok and reboot
         fw_setenv seadog_part_new_size 1
         echo "======================== THANK YOU FOR THE PATIENCE ============================" > /dev/console
+        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand4.jpg
         sleep 5
         reboot now
     else
