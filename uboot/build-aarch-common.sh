@@ -53,7 +53,7 @@ checkError
 cd -
 
 # build script
-compileBootScript rpi rpi3bp
+compileBootScript $uboot_prefix $uboot_script
 
 writeln "U-BOOT BUILD DONE 👌😎"
 exit 0

@@ -7,5 +7,7 @@ export artifacts="./rpi/artifacts/bcm2837-rpi-3bp"
 export defconfig="./rpi/configs/bcm2837_rpi_3bp_defconfig"
 export dtb_prefix="broadcom/bcm28"
 export uboot_src="../u-boot"
+export uboot_script="rpi3bp"
+export uboot_prefix="rpi"
 
 ./uboot/build-aarch-common.sh "bcm2837-rpi-3bp" "$CLEAN"
