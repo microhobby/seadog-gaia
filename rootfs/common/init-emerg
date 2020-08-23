@@ -1,16 +1,17 @@
 #!/bin/bash
 
+resize
 # let's be lazy and use the openrc to init the basic sysfs and modules
 openrc sysinit
 
 # show the blue screen of death (yes on LINUX!)
 sleep 1s
-fbi -noverbose -d /dev/fb0 -T 1 /etc/bsod.jpg
+fbi -noverbose -d /dev/fb0 -T 1 /etc/bsod.jpg -a
 sleep 10s
 
 # save the vmcore dmesg
 vmcore-dmesg /proc/vmcore > /var/log/dmesg-crash.log
-sleep 30s
+sleep 20s
 
 # reboot
 echo b > /proc/sysrq-trigger
