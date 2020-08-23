@@ -14,6 +14,10 @@ depend() {
 start() {
     ebegin "Checking if the dog needs to be expanded"
 
+    # get the default block
+    MMCBLK=$(fw_printenv -n mmcblk)
+    MMCBLK=$(echo $MMCBLK | tr p2 " " | xargs)
+
     # check if the parted is ok
     SEADOG_PART_NEW_SIZE=$(cat /proc/cmdline | awk -v RS=" " '/^seadog.partnewsize=/ {print substr($0,20)}')
     # check if the expand is ok
@@ -28,19 +32,19 @@ start() {
         cat /etc/welcome > /dev/console
         sleep 2
         echo "====================== THANK YOU FOR USE SEADOG LINUX ==========================" > /dev/console
-        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand1.jpg
+        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand1.jpg -a
         sleep 2
         echo "===================== WE NEED TO CONFIGURE YOUR SDCARD =========================" > /dev/console
-        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand2.jpg
+        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand2.jpg -a
         sleep 2
         echo "================= YOUR BOARD WILL REBOOT AFTER CONFIGURATION ===================" > /dev/console
-        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand3.jpg
+        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand3.jpg -a
         sleep 4
 
-        PART_START=$(parted /dev/mmcblk0 -ms unit s p | grep "^2" | cut -f 2 -d: | cut -f 1 -ds)
+        PART_START=$(parted $MMCBLK -ms unit s p | grep "^2" | cut -f 2 -d: | cut -f 1 -ds)
         [ "$PART_START" ] || eend 1
 
-        fdisk /dev/mmcblk0 <<EOF
+        fdisk $(echo $MMCBLK | tr p2 " ") <<EOF
 p
 d
 2
@@ -56,14 +60,14 @@ EOF
         # set that all are ok and reboot
         fw_setenv seadog_part_new_size 1
         echo "======================== THANK YOU FOR THE PATIENCE ============================" > /dev/console
-        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand4.jpg
+        fbi -noverbose -d /dev/fb0 -T 1 /etc/seadog-expand4.jpg -a
         sleep 5
         reboot now
     else
         if [[ "$SEADOG_EXPAND" == "0" ]]; then
             echo 'Expanding new Seadog rootfs size ...' > /dev/console
             
-            resize2fs /dev/mmcblk0p2
+            resize2fs ${MMCBLK}p2
 
             if [ "$?" -ne "0" ]; then
                 eerror "Error trying to resize the rootfs partition!"
