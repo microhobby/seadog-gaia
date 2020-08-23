@@ -1,0 +1,19 @@
+# For more options and information see
+# http://rpf.io/configtxt
+
+hdmi_force_hotplug:0=1
+hdmi_drive:0=2
+hdmi_group:0=2
+hdmi_mode:0=82
+# Not yet implemented for RPi4B
+hdmi_blanking:0=1
+disable_overscan=1
+
+arm_64bit=1
+enable_uart=1
+gpu_freq=250
+core_freq=250
+uart_2ndstage=1
+upstream_kernel=1
+device_tree=broadcom/bcm2711-rpi-4-b.dtb
+kernel=bootImg
