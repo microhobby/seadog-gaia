@@ -36,9 +36,6 @@ if printenv boot_count
         setenv emerg
 fi
 
-# we need the invironment for Linux
-saveenv
-
 if printenv mmcblk
     then
         echo 'mmc block seted'
@@ -46,6 +43,9 @@ if printenv mmcblk
         echo 'mmc block not found, setting /dev/mmcblk0p2'
         setenv mmcblk '/dev/mmcblk0p2'
 fi
+
+# we need the invironment for Linux
+saveenv
 
 if printenv boot_file
     then
