@@ -51,12 +51,34 @@ case "$1" in
         # do rootfs and pack img
         ./rootfs/rpi/do-rootfs-rpi-3bp.sh
 		;;
+    "bcm2711-rpi-4b")
+        # Raspberry Pi 4B
+        writeln "Seadog for Raspberry Pi 4B"
+
+        # replace for the new version
+        replaceVersions kernel/rpi/configs/bcm2711_rpi_4b_defconfig
+        replaceVersions uboot/rpi/configs/bcm2711_rpi_4b_defconfig
+        replaceVersions rootfs/common/os-release
+
+        # compile u-boot
+        ./uboot/rpi/build-raspi-4b.sh
+
+        # compile mainline Kernel
+        ./kernel/rpi/build-raspi-4b.sh
+
+        # compile initrd
+        ./initrd/do-initrd-common.sh
+
+        # do rootfs and pack img
+        ./rootfs/rpi/do-rootfs-rpi-4b.sh
+        ;;
 	*)
 		writelnError "What? 🤷"
 		writelnError "🚫 ${BOLD}$1${RED} Not implemented ..."
 
         echo "Supported hardwares:"
         echo -e "Raspberry Pi 3B+ \t::\t bcm2837-rpi-3bp"
+        echo -e "Raspberry Pi 4B \t::\t bcm2711-rpi-4b"
 
 		exit 1
 		;;
