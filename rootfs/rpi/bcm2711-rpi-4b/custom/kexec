@@ -1,0 +1,28 @@
+#!/sbin/openrc-run
+# Copyright (c) 2020 Seadog Linux
+# The Seadog Linux licenses this file to you under the MIT license.
+# See the LICENSE file in the project root for more information.
+
+description="Seadog Emergency Mode Kdump"
+
+depend() {
+	after emerg-mode
+}
+
+start() {
+    ebegin "Kexec"
+
+    cmdl="console=ttyS0,115200 8250.nr_uarts=1"
+    cmdl="${cmdl} root=/dev/mmcblk1p2 rootwait"
+    cmdl="${cmdl} init=/sbin/init-emerg"
+    cmdl="${cmdl} 1 maxcpus=1"
+    # cmdl="${cmdl} ignore_loglevel earlycon"
+    cmdl="${cmdl} logo.nologo"
+    cmdl="${cmdl} irqchip.gicv3_nolpi=1"
+    cmdl="${cmdl} seadog.kdump=1"
+
+    kexec -p /boot/Image \
+        --command-line="${cmdl}"
+
+    eend $?
+}
