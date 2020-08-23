@@ -1,0 +1,132 @@
+# script for bcm2837-rpi-3bp
+
+# For Linux use
+if printenv seadog_part_new_size
+    then
+        echo 'SEADOG_PART_NEW_SIZE seted'
+    else
+        echo 'SEADOG_PART_NEW_SIZE setting to 0'
+        setenv seadog_part_new_size 0
+fi
+
+if printenv seadog_expand
+    then
+        echo 'SEADOG_EXPAND seted'
+    else
+        echo 'SEADOG_EXPAND setting to 0'
+        setenv seadog_expand 0
+fi
+
+if printenv boot_count
+    then
+        echo 'boot.count seted'
+
+        # add 1
+        setexpr boot_count ${boot_count} + 1
+
+        if test 4 = ${boot_count}
+            then
+                echo 'boot.count explode setting emerg mode ...'
+                setenv emerg 1
+                setenv boot_count
+        fi
+    else
+        echo 'first boot'
+        setenv boot_count 0
+        setenv emerg
+fi
+
+if printenv mmcblk
+    then
+        echo 'mmc block seted'
+    else
+        echo 'mmc block not found, setting /dev/mmcblk1p2'
+        setenv mmcblk '/dev/mmcblk1p2'
+fi
+
+# we need the invironment for Linux
+saveenv
+
+if printenv boot_file
+    then
+        echo 'boot_file seted'
+    else
+        echo 'boot_file not found, setting Image'
+        setenv boot_file 'Image'
+fi
+
+if printenv console
+    then
+        echo 'console seted'
+    else
+        echo 'console not found, setting default console cmdline'
+        setenv console 'console=ttyS0,115200 8250.nr_uarts=1'
+fi
+
+if printenv loglevel
+    then
+        echo 'kernel loglevel seted'
+    else
+        setenv loglevel 4
+fi
+
+if printenv debug
+    then
+        echo 'kernel debug seted'
+        setenv debug_cmd 'ignore_loglevel earlycon initcall_debug earlyprintk'
+    else
+        setenv debug_cmd 'quiet'
+fi
+
+# this will enable the kdump
+if printenv crashkernel
+    then
+        echo 'crashkernel seted'
+        # for pi4 we need to load crashkernel below 4GB
+        setenv crashkernel_r crashkernel=${crashkernel}M@16M
+fi
+
+# this will force emergency mode
+if printenv emergency
+    then
+        echo 'Force Emergency mode seted'
+        setenv emerg 1
+fi
+
+mmc dev 1
+
+setenv bootargs ${console}
+setenv bootargs ${bootargs} ${debug_cmd}
+setenv bootargs ${bootargs} root=${mmcblk}
+setenv bootargs ${bootargs} ${init_program}
+setenv bootargs ${bootargs} rootwait
+setenv bootargs ${bootargs} loglevel=${loglevel}
+setenv bootargs ${bootargs} logo.nologo
+setenv bootargs ${bootargs} TERM=xterm-256color
+setenv bootargs ${bootargs} seadog.partnewsize=${seadog_part_new_size}
+setenv bootargs ${bootargs} seadog.expand=${seadog_expand}
+setenv bootargs ${bootargs} boot.count=${boot_count}
+setenv bootargs ${bootargs} irqchip.gicv3_nolpi=1 ${crashkernel_r}
+
+# for pi4 we will load the kernel above 16MB
+setenv kernel_addr_r 0x0f080000
+fatload mmc 1:1 ${kernel_addr_r} ${boot_file}
+
+# for pi 4 we need to get from Broadcom firmware the correct framebuffer
+#fatload mmc 1:1 ${fdt_addr_r} ${fdtfile}
+
+# for use the kdump we need to set kaslr-seed to zero
+fdt addr ${fdt_addr}
+fdt rm /chosen kaslr-seed
+fdt rm /reserved-memory/linux,cma alloc-ranges
+
+if printenv emerg
+    then
+        echo 'Booting in emergency mode ...'
+        setenv bootargs ${console} rdinit=/init logo.nologo
+        fatload mmc 0:1 ${scriptaddr} emerg.img
+        booti ${kernel_addr_r} ${scriptaddr} ${fdt_addr}
+    else
+        echo 'Seadog is comming ...'
+        booti ${kernel_addr_r} - ${fdt_addr}
+fi
