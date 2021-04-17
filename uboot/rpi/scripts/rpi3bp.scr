@@ -82,7 +82,7 @@ fi
 if printenv crashkernel
     then
         echo 'crashkernel seted'
-        setenv crashkernel crashkernel=${crashkernel}M
+        setenv crashkernel_r crashkernel=${crashkernel}M
 fi
 
 # this will force emergency mode
@@ -106,7 +106,7 @@ setenv bootargs ${bootargs} TERM=xterm-256color
 setenv bootargs ${bootargs} seadog.partnewsize=${seadog_part_new_size}
 setenv bootargs ${bootargs} seadog.expand=${seadog_expand}
 setenv bootargs ${bootargs} boot.count=${boot_count}
-setenv bootargs ${bootargs} irqchip.gicv3_nolpi=1 ${crashkernel}
+setenv bootargs ${bootargs} irqchip.gicv3_nolpi=1 ${crashkernel_r}
 
 fatload mmc 0:1 ${kernel_addr_r} ${boot_file}
 fatload mmc 0:1 ${fdt_addr_r} ${fdtfile}
