@@ -1,8 +1,11 @@
 #!/bin/bash
 
 resize
-# let's be lazy and use the openrc to init the basic sysfs and modules
-openrc sysinit
+# let's be minimal
+mount -t proc proc proc/
+mount -t sysfs sys sys/
+mount -o bind /dev dev/
+mount -o rw,remount /
 
 # show the blue screen of death (yes on LINUX!)
 sleep 1s
