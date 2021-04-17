@@ -19,13 +19,13 @@ function createImg () {
     mkdir -p dist/$1
 
     dd if=/dev/zero of=$IMAGE_FILE \
-        bs=1024 count=600240 status=progress
+        bs=1024 count=400240 status=progress
 
     # partitions
     sudo parted $IMAGE_FILE -s mktable msdos
     sudo parted $IMAGE_FILE -s mkpart primary fat32 1 50 \
         set 1 lba on align-check optimal 1 \
-        mkpart primary ext4 51 370
+        mkpart primary ext4 51 350
 
     # format
     kpartxret="$(sudo kpartx -av $IMAGE_FILE)"
