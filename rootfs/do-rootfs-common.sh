@@ -78,7 +78,7 @@ function doRootfsArm64 () {
     writeln 'Installing rootfs files'
 
     # unpack
-    sudo tar -xzf rootfs/alpine-minirootfs-3.12.0-aarch64.tar.gz \
+    sudo tar -xzf rootfs/alpine-minirootfs-3.13.5-aarch64.tar.gz \
         -C rootfs/mntext/
 
     checkError
