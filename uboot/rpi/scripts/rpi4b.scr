@@ -124,7 +124,7 @@ if printenv emerg
     then
         echo 'Booting in emergency mode ...'
         setenv bootargs ${console} rdinit=/init logo.nologo
-        fatload mmc 0:1 ${scriptaddr} emerg.img
+        fatload mmc 1:1 ${scriptaddr} emerg.img
         booti ${kernel_addr_r} ${scriptaddr} ${fdt_addr}
     else
         echo 'Seadog is comming ...'
