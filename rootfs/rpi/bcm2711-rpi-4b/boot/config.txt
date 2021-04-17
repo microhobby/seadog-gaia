@@ -9,6 +9,10 @@ hdmi_mode:0=82
 hdmi_blanking:0=1
 disable_overscan=1
 
+# TODO we need a way to make this configurable
+framebuffer_width=1024
+framebuffer_height=600
+
 arm_64bit=1
 enable_uart=1
 gpu_freq=250
