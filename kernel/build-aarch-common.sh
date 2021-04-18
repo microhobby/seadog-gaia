@@ -33,6 +33,9 @@ sudo chmod -R 777 $artifacts
 # go to source folder
 cd $kernel_src
 
+# checkout to the right repo
+git checkout seadog-pi4b
+
 if [ "$2" != "no-clean" ]; then
 	writeln "CLEAN 🧹"
 	# Goto kernel source and clean

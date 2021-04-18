@@ -37,11 +37,15 @@ writeln "🏗️  Building u-boot for $1"
 # go to source folder
 cd $uboot_src
 
-if [ "$2" != "no-clean" ]; then
+# checkout to the right repo
+git checkout v2020.07
+
+if [ "$3" != "no-clean" ]; then
     writeln "🧹 CLEAN"
     make CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts clean
     checkError
 fi
+
 pwd
 writeln "🧰 CONFIG"
 make CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts $defconfig
