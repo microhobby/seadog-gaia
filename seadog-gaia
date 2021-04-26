@@ -8,7 +8,8 @@
 export SEADOG_MAJOR_VERSION=0
 export SEADOG_MINOR_VERSION=0
 export SEADOG_BUILD_VERSION=$(wget "http://microhobby.com.br/safira2/kernelbuild.php"  -q -O -)
-export SEADOG_BUILD_VERSION=$((SEADOG_BUILD_VERSION+1))
+#export SEADOG_BUILD_VERSION=$((SEADOG_BUILD_VERSION+1))
+export SEADOG_BUILD_VERSION=27
 export SEADOG_NAME="kleptomaniac-octopus"
 
 # create the files from templates
@@ -20,7 +21,7 @@ function replaceVersions () {
 }
 
 # you can use to set how many threads for the build
-# export JOBS=12
+export JOBS=4
 
 export CLEAN="$2"
 export arg=""
@@ -30,6 +31,18 @@ seadogWelcomeColor
 
 # check the arguments
 case "$1" in
+    "bcm2837-rpi-3b")
+        # Raspberry Pi 3B+
+        writeln "Seadog for Raspberry Pi 3B"
+
+        # replace for the new version
+        #replaceVersions kernel/rpi/configs/bcm2837_rpi_3b_defconfig
+        replaceVersions uboot/rpi/configs/bcm2837_rpi_3b_defconfig
+        #replaceVersions rootfs/common/os-release
+
+        # compile u-boot
+        ./uboot/rpi/build-raspi-3b.sh
+    ;;
 	"bcm2837-rpi-3bp")
 		# Raspberry Pi 3B+
         writeln "Seadog for Raspberry Pi 3B+"
@@ -77,6 +90,7 @@ case "$1" in
 		writelnError "🚫 ${BOLD}$1${RED} Not implemented ..."
 
         echo "Supported hardwares:"
+        echo -e "Raspberry Pi 3B \t::\t bcm2837-rpi-3b"
         echo -e "Raspberry Pi 3B+ \t::\t bcm2837-rpi-3bp"
         echo -e "Raspberry Pi 4B \t::\t bcm2711-rpi-4b"
 
