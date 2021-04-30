@@ -38,9 +38,9 @@ writeln "🏗️  Building u-boot for $1"
 cd $uboot_src
 
 # checkout to the right repo
-git checkout v2020.07
+git checkout v2021.04
 
-if [ "$3" != "no-clean" ]; then
+if [ "$2" != "no-clean" ]; then
     writeln "🧹 CLEAN"
     make CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts clean
     checkError
