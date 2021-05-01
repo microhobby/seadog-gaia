@@ -37,6 +37,14 @@ fi
 # welcome
 seadogWelcomeColor
 
+# debug arguments
+echo -e "🍟 BOARD        \t::\t $1"
+echo -e "🧹 CLEAN        \t::\t ${CLEAN}"
+echo -e "👢 UBOOT_BRANCH \t::\t ${UBOOT_BRANCH}"
+echo -e "💪 JOBS         \t::\t ${JOBS}"
+echo ""
+sleep 2s
+
 # check the arguments
 case "$1" in
     "bcm2837-rpi-3b")
@@ -97,6 +105,7 @@ case "$1" in
 		writelnError "What? 🤷"
 		writelnError "🚫 ${BOLD}$1${RED} Not implemented ..."
 
+        echo ""
         echo "Supported hardwares:"
         echo -e "Raspberry Pi 3B \t::\t bcm2837-rpi-3b"
         echo -e "Raspberry Pi 3B+ \t::\t bcm2837-rpi-3bp"
