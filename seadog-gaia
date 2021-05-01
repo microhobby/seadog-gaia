@@ -8,8 +8,14 @@
 export SEADOG_MAJOR_VERSION=0
 export SEADOG_MINOR_VERSION=0
 export SEADOG_BUILD_VERSION=$(wget "http://microhobby.com.br/safira2/kernelbuild.php"  -q -O -)
-#export SEADOG_BUILD_VERSION=$((SEADOG_BUILD_VERSION+1))
-export SEADOG_BUILD_VERSION=27
+
+# for development and enginerring versions
+if [[ ! -v SEADOG_DEV ]]; then
+    export SEADOG_BUILD_VERSION=$((SEADOG_BUILD_VERSION+1))
+else
+    export SEADOG_BUILD_VERSION="$SEADOG_DEV"
+fi
+
 export SEADOG_NAME="kleptomaniac-octopus"
 
 # create the files from templates
