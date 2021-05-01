@@ -25,6 +25,7 @@ if [[ ! -v JOBS ]]; then
 	export JOBS=12
 fi
 
+export SEADOG_BOARD=$1
 export CLEAN="$2"
 export UBOOT_BRANCH_ARG="$3"
 export KERNEL_BRANCH_ARG="$4"
@@ -50,13 +51,18 @@ function setKernelBranch () {
 seadogWelcomeColor
 
 # debug arguments
-echo -e "🍟 BOARD         \t::\t $1"
-echo -e "🧹 CLEAN         \t::\t ${CLEAN}"
-echo -e "👢 UBOOT_BRANCH  \t::\t ${UBOOT_BRANCH}"
-echo -e "👢 KERNEL_BRANCH \t::\t ${KERNEL_BRANCH}"
-echo -e "💪 JOBS          \t::\t ${JOBS}"
-echo ""
-sleep 2s
+function printConfigurationEnvironment () {
+    echo -e "🍟 BOARD         \t::\t ${SEADOG_BOARD}"
+    echo -e "🧹 CLEAN         \t::\t ${CLEAN}"
+    echo -e "👢 UBOOT_BRANCH  \t::\t ${UBOOT_BRANCH}"
+    echo -e "👢 KERNEL_BRANCH \t::\t ${KERNEL_BRANCH}"
+    echo -e "💪 JOBS          \t::\t ${JOBS}"
+    echo ""
+    echo -e "🐶 VERSION       \t::\t ${SEADOG_MAJOR_VERSION}.${SEADOG_MINOR_VERSION}.${SEADOG_BUILD_VERSION}"
+    echo -e "🐶 CODE NAME     \t::\t ${SEADOG_NAME}"
+    echo ""
+    sleep 2s
+}
 
 # check the arguments
 case "$1" in
@@ -72,6 +78,7 @@ case "$1" in
         # configure branch tag
         setUBootBranch v2021.04
         setKernelBranch v5.12
+        printConfigurationEnvironment
 
         # compile u-boot
         ./uboot/rpi/build-raspi-3b.sh
@@ -88,6 +95,7 @@ case "$1" in
         # configure branch tag
         setUBootBranch v2021.04
         setKernelBranch v5.12
+        printConfigurationEnvironment
 
         # compile u-boot
         ./uboot/rpi/build-raspi-3bp.sh
@@ -113,6 +121,7 @@ case "$1" in
         # configure branch tag
         setUBootBranch v2021.04
         setKernelBranch v5.12
+        printConfigurationEnvironment
 
         # compile u-boot
         ./uboot/rpi/build-raspi-4b.sh
