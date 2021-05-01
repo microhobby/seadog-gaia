@@ -27,11 +27,17 @@ fi
 
 export CLEAN="$2"
 export UBOOT_BRANCH="$3"
+export KERNEL_BRANCH="$4"
 export arg=""
 
 # set seadog default u-boot branch
 if [ "$UBOOT_BRANCH" == "" ]; then
 	export UBOOT_BRANCH="v2021.04"
+fi
+
+# set seadog default kernel branch
+if [ "$KERNEL_BRANCH" == "" ]; then
+	export KERNEL_BRANCH="v5.12"
 fi
 
 # welcome

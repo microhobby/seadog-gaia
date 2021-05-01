@@ -36,7 +36,10 @@ sudo chmod -R 777 $artifacts
 cd $kernel_src
 
 # checkout to the right repo
-git checkout seadog-pi4b
+if [ "$KERNEL_BRANCH" != "" ]; then
+	echo "Linux Kernel checkout to ${KERNEL_BRANCH}"
+	git checkout ${KERNEL_BRANCH}
+fi
 
 if [ "$2" != "no-clean" ]; then
 	writeln "CLEAN 🧹"
