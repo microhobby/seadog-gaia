@@ -38,7 +38,10 @@ writeln "🏗️  Building u-boot for $1"
 cd $uboot_src
 
 # checkout to the right repo
-git checkout v2021.04
+if [ "$UBOOT_BRANCH" != "" ]; then
+	echo "U-Boot checkout to ${UBOOT_BRANCH}"
+	git checkout ${UBOOT_BRANCH}
+fi
 
 if [ "$2" != "no-clean" ]; then
     writeln "🧹 CLEAN"

@@ -24,7 +24,13 @@ function replaceVersions () {
 export JOBS=4
 
 export CLEAN="$2"
+export UBOOT_BRANCH="$3"
 export arg=""
+
+# set seadog default u-boot branch
+if [ "$UBOOT_BRANCH" == "" ]; then
+	export UBOOT_BRANCH="v2021.04"
+fi
 
 # welcome
 seadogWelcomeColor
