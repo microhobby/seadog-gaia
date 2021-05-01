@@ -22,6 +22,8 @@ function checkError () {
 # check if we have jobs
 if [[ ! -v JOBS ]]; then
 	export jobs=12
+else
+	export jobs=${JOBS}
 fi
 
 # append the gaia path

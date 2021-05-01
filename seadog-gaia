@@ -21,7 +21,9 @@ function replaceVersions () {
 }
 
 # you can use to set how many threads for the build
-export JOBS=4
+if [[ ! -v JOBS ]]; then
+	export JOBS=12
+fi
 
 export CLEAN="$2"
 export UBOOT_BRANCH="$3"

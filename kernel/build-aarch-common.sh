@@ -20,6 +20,8 @@ export O=$artifacts
 
 if [[ ! -v JOBS ]]; then
 	export jobs=12
+else
+	export jobs=${JOBS}
 fi
 
 # append the gaia path
