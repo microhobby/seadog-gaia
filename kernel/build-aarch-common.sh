@@ -41,7 +41,7 @@ if [ "$KERNEL_BRANCH" != "" ]; then
 	git checkout ${KERNEL_BRANCH}
 fi
 
-if [ "$2" != "no-clean" ]; then
+if [ "$2" == "clean" ] || [ "$2" == "kernel" ]; then
 	writeln "CLEAN 🧹"
 	# Goto kernel source and clean
 	sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts distclean

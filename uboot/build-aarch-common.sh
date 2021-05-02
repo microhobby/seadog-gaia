@@ -45,7 +45,7 @@ if [ "$UBOOT_BRANCH" != "" ]; then
 	git checkout ${UBOOT_BRANCH}
 fi
 
-if [ "$2" != "no-clean" ]; then
+if [ "$2" == "clean" ] || [ "$2" == "uboot" ]; then
     writeln "🧹 CLEAN"
     make CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts clean
     checkError
