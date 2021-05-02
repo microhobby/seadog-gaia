@@ -39,17 +39,17 @@ export arg=""
 
 function setUBootBranch () {
     if [ "$UBOOT_BRANCH_ARG" == "" ]; then
-        export UBOOT_BRANCH="v2021.04"
-    else
         export UBOOT_BRANCH=$1
+    else
+        export UBOOT_BRANCH=$UBOOT_BRANCH_ARG
     fi
 }
 
 function setKernelBranch () {
     if [ "$KERNEL_BRANCH_ARG" == "" ]; then
-        export KERNEL_BRANCH="v5.12"
-    else
         export KERNEL_BRANCH=$1
+    else
+        export KERNEL_BRANCH=$KERNEL_BRANCH_ARG
     fi
 }
 
