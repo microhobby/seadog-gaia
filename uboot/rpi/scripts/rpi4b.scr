@@ -1,4 +1,4 @@
-# script for bcm2837-rpi-3bp
+# script for bcm2837-rpi-4b
 
 # For Linux use
 if printenv seadog_part_new_size
@@ -83,7 +83,8 @@ if printenv crashkernel
     then
         echo 'crashkernel seted'
         # for pi4 we need to load crashkernel below 4GB
-        setenv crashkernel_r crashkernel=${crashkernel}M@16M
+        # crashkernel=256M@16M
+        setenv crashkernel_r crashkernel=${crashkernel}
 fi
 
 # this will force emergency mode
@@ -92,8 +93,6 @@ if printenv emergency
         echo 'Force Emergency mode seted'
         setenv emerg 1
 fi
-
-mmc dev 1
 
 setenv bootargs ${console}
 setenv bootargs ${bootargs} ${debug_cmd}
@@ -107,10 +106,12 @@ setenv bootargs ${bootargs} seadog.partnewsize=${seadog_part_new_size}
 setenv bootargs ${bootargs} seadog.expand=${seadog_expand}
 setenv bootargs ${bootargs} boot.count=${boot_count}
 setenv bootargs ${bootargs} irqchip.gicv3_nolpi=1 ${crashkernel_r}
+setenv kernel_addr_r 0x0f080000
 
 # for pi4 we will load the kernel above 16MB
-setenv kernel_addr_r 0x0f080000
-fatload mmc 1:1 ${kernel_addr_r} ${boot_file}
+mmc dev 1
+load mmc 1:1 ${kernel_addr_r} ${boot_file}
+echo 'Kernel loaded'
 
 # for pi 4 we need to get from Broadcom firmware the correct framebuffer
 #fatload mmc 1:1 ${fdt_addr_r} ${fdtfile}
