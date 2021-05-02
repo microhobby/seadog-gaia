@@ -151,6 +151,12 @@ case "$1" in
         echo -e "Raspberry Pi 3B+ \t::\t bcm2837-rpi-3bp"
         echo -e "Raspberry Pi 4B \t::\t bcm2711-rpi-4b"
 
+        echo ""
+        echo "How to use example:"
+        echo -e "\t SEADOG_DEV='TEST' JOBS=8 ./seadog-gaia SEADOG_BOARD CLEAN UBOOT_BRANCH KERNEL_BRANCH"
+        echo ""
+
+
 		exit 1
 		;;
 esac
