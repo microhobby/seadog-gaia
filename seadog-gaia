@@ -16,7 +16,7 @@ else
     export SEADOG_BUILD_VERSION="$SEADOG_DEV"
 fi
 
-export SEADOG_NAME="kleptomaniac-octopus"
+export SEADOG_NAME="frozen-wasteland"
 
 # create the files from templates
 function replaceVersions () {
@@ -126,7 +126,7 @@ case "$1" in
 
         # configure branch tag
         setUBootBranch v2021.04
-        setKernelBranch v5.12
+        setKernelBranch seadog-pi4b
         printConfigurationEnvironment
 
         # compile u-boot
