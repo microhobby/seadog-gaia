@@ -6,6 +6,7 @@ rootfs/mntfat/
 os-release
 bcm2837_rpi_3bp_defconfig
 bcm2711_rpi_4b_defconfig
+bcm2837_rpi_3b_defconfig
 initrd/common/initramfs/etc/
 initrd/common/initramfs/newroot/
 initrd/common/initramfs/proc/
