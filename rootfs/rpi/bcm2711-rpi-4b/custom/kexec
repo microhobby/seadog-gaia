@@ -20,6 +20,7 @@ start() {
     cmdl="${cmdl} logo.nologo"
     cmdl="${cmdl} irqchip.gicv3_nolpi=1"
     cmdl="${cmdl} seadog.kdump=1"
+    cmdl="${cmdl} reset_devices"
 
     kexec -p /boot/Image \
         --command-line="${cmdl}"
