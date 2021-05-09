@@ -77,7 +77,7 @@ case "$1" in
         writeln "Seadog for Raspberry Pi 3B"
 
         # replace for the new version
-        #replaceVersions kernel/rpi/configs/bcm2837_rpi_3b_defconfig
+        replaceVersions kernel/rpi/configs/bcm2837_rpi_3b_defconfig
         replaceVersions uboot/rpi/configs/bcm2837_rpi_3b_defconfig
         #replaceVersions rootfs/common/os-release
 
@@ -88,6 +88,9 @@ case "$1" in
 
         # compile u-boot
         ./uboot/rpi/build-raspi-3b.sh
+
+        # compile mainline Kernel
+        ./kernel/rpi/build-raspi-3b.sh
     ;;
 	"bcm2837-rpi-3bp")
 		# Raspberry Pi 3B+
