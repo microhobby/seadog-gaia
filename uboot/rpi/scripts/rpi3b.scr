@@ -32,6 +32,7 @@ if printenv loglevel
         setenv loglevel 4
 fi
 
+setenv fdtfile 'bcm2837-rpi-3-b.dtb'
 
 setenv debug_cmd 'ignore_loglevel earlycon initcall_debug earlyprintk'
 

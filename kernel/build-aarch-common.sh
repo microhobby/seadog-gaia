@@ -48,6 +48,8 @@ if [ "$2" == "clean" ] || [ "$2" == "kernel" ]; then
 	sudo make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts clean
 fi
 
+echo "BUILDING USING -j$jobs"
+
 writeln "CONFIG 🧰"
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=$artifacts $defconfig
 checkError

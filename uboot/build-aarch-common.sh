@@ -9,7 +9,6 @@ function compileBootScript () {
 		-n ./uboot/$1/scripts/$2.scr \
 		-d ./uboot/$1/scripts/$2.scr \
 		$artifacts/boot.scr.uimg
-	pwd
 	
 	checkError
 }
