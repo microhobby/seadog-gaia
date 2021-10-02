@@ -82,7 +82,7 @@ case "$1" in
         #replaceVersions rootfs/common/os-release
 
         # configure branch tag
-        setUBootBranch v2021.04
+        setUBootBranch master
         setKernelBranch v5.12
         printConfigurationEnvironment
 
