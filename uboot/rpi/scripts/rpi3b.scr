@@ -36,7 +36,7 @@ setenv fdtfile 'bcm2837-rpi-3-b.dtb'
 
 setenv debug_cmd 'ignore_loglevel earlycon initcall_debug earlyprintk'
 
-setenv bootargs ${console}
+setenv bootargs ${console} root=${mmcblk}
 setenv bootargs ${bootargs} ${debug_cmd}
 setenv bootargs ${bootargs} loglevel=${loglevel}
 
