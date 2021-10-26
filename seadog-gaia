@@ -83,7 +83,7 @@ case "$1" in
 
         # configure branch tag
         setUBootBranch master
-        setKernelBranch v5.12
+        setKernelBranch master
         printConfigurationEnvironment
 
         # compile u-boot
