@@ -30,7 +30,7 @@ apk add sudo \
         e2fsprogs-extra \
         findmnt \
         parted \
-        uboot-tools \
+        u-boot-tools \
         dbus \
         udev \
         eudev \
@@ -73,3 +73,7 @@ rc-update add kexec boot
 rc-update add mount-ro shutdown
 rc-update add killprocs shutdown
 rc-update add savecache shutdown
+
+# custom
+mkdir /custom
+mv /bin/dmesg /custom
