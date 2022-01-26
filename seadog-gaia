@@ -7,7 +7,7 @@
 # Seadog version
 export SEADOG_MAJOR_VERSION=0
 export SEADOG_MINOR_VERSION=0
-export SEADOG_BUILD_VERSION=$(wget "http://microhobby.com.br/safira2/kernelbuild.php"  -q -O -)
+export SEADOG_BUILD_VERSION=0
 
 # for development and enginerring versions
 if [[ ! -v SEADOG_DEV ]]; then
@@ -73,24 +73,27 @@ function printConfigurationEnvironment () {
 # check the arguments
 case "$1" in
     "bcm2837-rpi-3b")
-        # Raspberry Pi 3B+
+        # Raspberry Pi 3B
         writeln "Seadog for Raspberry Pi 3B"
 
         # replace for the new version
         replaceVersions kernel/rpi/configs/bcm2837_rpi_3b_defconfig
-        replaceVersions uboot/rpi/configs/bcm2837_rpi_3b_defconfig
-        #replaceVersions rootfs/common/os-release
+        # replaceVersions uboot/rpi/configs/bcm2837_rpi_3b_defconfig
+        # #replaceVersions rootfs/common/os-release
 
-        # configure branch tag
-        setUBootBranch master
-        setKernelBranch master
+        # # configure branch tag
+        # setUBootBranch master
+        # setKernelBranch master
         printConfigurationEnvironment
 
-        # compile u-boot
+        # # compile u-boot
         ./uboot/rpi/build-raspi-3b.sh
 
-        # compile mainline Kernel
+        # # compile mainline Kernel
         ./kernel/rpi/build-raspi-3b.sh
+
+        # do rootfs and pack img
+        ./rootfs/rpi/do-rootfs-rpi-3b.sh
     ;;
 	"bcm2837-rpi-3bp")
 		# Raspberry Pi 3B+
