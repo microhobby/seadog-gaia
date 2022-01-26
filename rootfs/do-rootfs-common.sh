@@ -19,7 +19,7 @@ function createImg () {
     mkdir -p dist/$1
 
     dd if=/dev/zero of=$IMAGE_FILE \
-        bs=1024 count=400240 status=progress
+        bs=1048 count=400240 status=progress
 
     # partitions
     sudo parted $IMAGE_FILE -s mktable msdos
@@ -33,12 +33,14 @@ function createImg () {
 
     sudo mkfs.vfat -F 32 /dev/mapper/${PART_LOOP}p1
     sudo mkfs.ext4 /dev/mapper/${PART_LOOP}p2
-    sudo fatlabel /dev/mapper/${PART_LOOP}p1 'boot'
+    sudo fatlabel /dev/mapper/${PART_LOOP}p1 'BOOT'
     sudo e2label /dev/mapper/${PART_LOOP}p2 'seadog'
+    sync
+
     sudo kpartx -dv $IMAGE_FILE
-    sudo dmsetup remove /dev/mapper/${PART_LOOP}p1
-    sudo dmsetup remove /dev/mapper/${PART_LOOP}p2
-    sudo losetup -d /dev/${PART_LOOP}
+    # sudo dmsetup remove /dev/mapper/${PART_LOOP}p1
+    # sudo dmsetup remove /dev/mapper/${PART_LOOP}p2
+    # sudo losetup -d /dev/${PART_LOOP}
 
     checkError
     writeln '✅ IMG Created'
@@ -66,9 +68,9 @@ function umountImg () {
     sudo umount rootfs/mntfat
     sudo umount rootfs/mntext
     sudo kpartx -dv $IMAGE_FILE
-    sudo dmsetup remove /dev/mapper/${PART_LOOP}p1
-    sudo dmsetup remove /dev/mapper/${PART_LOOP}p2
-    sudo losetup -d /dev/${PART_LOOP}
+    # sudo dmsetup remove /dev/mapper/${PART_LOOP}p1
+    # sudo dmsetup remove /dev/mapper/${PART_LOOP}p2
+    # sudo losetup -d /dev/${PART_LOOP}
 
     checkError
     writeln '✅ IMG umounted'
@@ -78,7 +80,7 @@ function doRootfsArm64 () {
     writeln 'Installing rootfs files'
 
     # unpack
-    sudo tar -xzf rootfs/alpine-minirootfs-3.13.5-aarch64.tar.gz \
+    sudo tar -xzf rootfs/alpine-minirootfs-3.14.2-aarch64.tar.gz \
         -C rootfs/mntext/
 
     checkError
@@ -170,6 +172,7 @@ function doModulesInstall () {
     sudo make O=$artifacts INSTALL_MOD_PATH=$path modules_install
 	checkError
     
+    # TODO add switch for this feature
     # install the headers for compile reference (not needed for now)
     #sudo make O=$artifacts ARCH=arm64 INSTALL_HDR_PATH=$path/usr headers_install
     #checkError
@@ -288,13 +291,13 @@ function doRootFs () {
     prepare
     # create the img file and mount
     createImg $hardware
-    mountImg $hardware
+    mountImg
     # install boot files and kernel
     doBootfs $family $hardware $arch $vendor $dtb
     # install base distro
     doRootfsArm64 $hardware
     doModulesInstall $artifacts "$PWD/rootfs/mntext"
     doChrootBase "$PWD/rootfs/mntext" $hardware
-    umountImg $hardware
+    umountImg
     checkWSL
 }
