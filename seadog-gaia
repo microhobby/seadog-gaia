@@ -16,7 +16,7 @@ else
     export SEADOG_BUILD_VERSION="$SEADOG_DEV"
 fi
 
-export SEADOG_NAME="frozen-wasteland"
+export SEADOG_NAME="gobble-gobble"
 
 # create the files from templates
 function replaceVersions () {
