@@ -47,7 +47,7 @@ function checkErrorAndKill () {
 			rm -rf $IMAGE_FILE
 		fi
 
-		kill 0
+		killall bash
 	fi
 }
 
