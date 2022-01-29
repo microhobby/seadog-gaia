@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -E
+trap '[ "$?" -ne 22 ] || exit 22' ERR
+
 # use message utils
 . ./utils/fancyTerminalUtils.sh --source-only
 . ./utils/welcome.sh --source-only
