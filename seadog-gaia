@@ -28,7 +28,7 @@ function replaceVersions () {
 
 # you can use to set how many threads for the build
 if [[ ! -v JOBS ]]; then
-	export JOBS=12
+	export JOBS=$(nproc)
 fi
 
 export SEADOG_BOARD=$1
