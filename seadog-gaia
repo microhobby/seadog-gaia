@@ -70,101 +70,27 @@ function printConfigurationEnvironment () {
     sleep 2s
 }
 
-# check the arguments
-case "$1" in
-    "bcm2837-rpi-3b")
-        # Raspberry Pi 3B
-        writeln "Seadog for Raspberry Pi 3B"
+# call the boards script
+if test -f "boards/$1.sh"; then
+    . boards/$1.sh --source-only
+    boardPipeline
+else
+    writelnError "What? 🤷"
+    writelnError "🚫 ${BOLD}$1${RED} Not implemented ..."
 
-        # replace for the new version
-        replaceVersions kernel/rpi/configs/bcm2837_rpi_3b_defconfig
-        # replaceVersions uboot/rpi/configs/bcm2837_rpi_3b_defconfig
-        # #replaceVersions rootfs/common/os-release
+    echo ""
+    echo "Supported hardwares:"
+    echo -e "Raspberry Pi 3B \t::\t bcm2837-rpi-3b"
+    echo -e "Raspberry Pi 3B+ \t::\t bcm2837-rpi-3bp"
+    echo -e "Raspberry Pi 4B \t::\t bcm2711-rpi-4b"
 
-        # # configure branch tag
-        # setUBootBranch master
-        # setKernelBranch master
-        printConfigurationEnvironment
-
-        # # compile u-boot
-        ./uboot/rpi/build-raspi-3b.sh
-
-        # # compile mainline Kernel
-        ./kernel/rpi/build-raspi-3b.sh
-
-        # do rootfs and pack img
-        ./rootfs/rpi/do-rootfs-rpi-3b.sh
-    ;;
-	"bcm2837-rpi-3bp")
-		# Raspberry Pi 3B+
-        writeln "Seadog for Raspberry Pi 3B+"
-
-        # replace for the new version
-        replaceVersions kernel/rpi/configs/bcm2837_rpi_3bp_defconfig
-        replaceVersions uboot/rpi/configs/bcm2837_rpi_3bp_defconfig
-        replaceVersions rootfs/common/os-release
-
-        # configure branch tag
-        setUBootBranch v2021.04
-        setKernelBranch v5.12
-        printConfigurationEnvironment
-
-        # compile u-boot
-        ./uboot/rpi/build-raspi-3bp.sh
-
-        # compile mainline Kernel
-        ./kernel/rpi/build-raspi-3bp.sh
-
-        # compile initrd
-        ./initrd/do-initrd-common.sh
-
-        # do rootfs and pack img
-        ./rootfs/rpi/do-rootfs-rpi-3bp.sh
-		;;
-    "bcm2711-rpi-4b")
-        # Raspberry Pi 4B
-        writeln "Seadog for Raspberry Pi 4B"
-
-        # replace for the new version
-        replaceVersions kernel/rpi/configs/bcm2711_rpi_4b_defconfig
-        replaceVersions uboot/rpi/configs/bcm2711_rpi_4b_defconfig
-        replaceVersions rootfs/common/os-release
-
-        # configure branch tag
-        setUBootBranch v2021.04
-        setKernelBranch seadog-pi4b
-        printConfigurationEnvironment
-
-        # compile u-boot
-        ./uboot/rpi/build-raspi-4b.sh
-
-        # compile mainline Kernel
-        ./kernel/rpi/build-raspi-4b.sh
-
-        # compile initrd
-        ./initrd/do-initrd-common.sh
-
-        # do rootfs and pack img
-        ./rootfs/rpi/do-rootfs-rpi-4b.sh
-        ;;
-	*)
-		writelnError "What? 🤷"
-		writelnError "🚫 ${BOLD}$1${RED} Not implemented ..."
-
-        echo ""
-        echo "Supported hardwares:"
-        echo -e "Raspberry Pi 3B \t::\t bcm2837-rpi-3b"
-        echo -e "Raspberry Pi 3B+ \t::\t bcm2837-rpi-3bp"
-        echo -e "Raspberry Pi 4B \t::\t bcm2711-rpi-4b"
-
-        echo ""
-        echo "How to use example:"
-        echo -e "\t SEADOG_DEV='TEST' JOBS=8 ./seadog-gaia SEADOG_BOARD CLEAN UBOOT_BRANCH KERNEL_BRANCH"
-        echo ""
+    echo ""
+    echo "How to use example:"
+    echo -e "\t SEADOG_DEV='TEST' JOBS=8 ./seadog-gaia SEADOG_BOARD CLEAN UBOOT_BRANCH KERNEL_BRANCH"
+    echo ""
 
 
-		exit 1
-		;;
-esac
+    exit 1
+fi
 
 writeln "🐶  SEADOG LINUX DISTRO v$SEADOG_MAJOR_VERSION.$SEADOG_MINOR_VERSION.$SEADOG_BUILD_VERSION"
