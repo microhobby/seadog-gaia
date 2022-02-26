@@ -1,0 +1,42 @@
+# script for Intel x86_64
+
+setenv boot_file "bzImage"
+
+if printenv mmcblk
+    then
+        echo 'mmc block seted'
+    else
+        echo 'mmc block not found, setting /dev/mmcblk1p2'
+        setenv mmcblk '/dev/sda2'
+fi
+
+if printenv console
+    then
+        echo 'console seted'
+    else
+        echo 'console not found, setting default console cmdline'
+        setenv console 'console=ttyS0,115200 8250.nr_uarts=1'
+fi
+
+if printenv loglevel
+    then
+        echo 'kernel loglevel seted'
+    else
+        setenv loglevel 4
+fi
+
+echo 'kernel debug seted'
+# setenv debug_cmd 'ignore_loglevel earlycon initcall_debug earlyprintk'
+setenv debug_cmd 'earlycon earlyprintk'
+
+setenv bootargs ${console}
+setenv bootargs ${bootargs} root=${mmcblk}
+setenv bootargs ${bootargs} rootwait
+setenv bootargs ${bootargs} ${debug_cmd}
+
+# For Linux use
+echo "Booting Seadog Linux on x86"
+
+ide dev 0
+load ide 0 ${kernel_addr_r} ${boot_file}
+zboot

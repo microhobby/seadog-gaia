@@ -1,5 +1,6 @@
 RED='\x1b[0;41m'
 GREEN='\x1b[42;30m'
+WARN='\x1b[1;33;43m'
 NC='\033[0m' # No Color
 BOLD='\033[1m'
 NORMAL='\033[2m'
@@ -53,6 +54,10 @@ function checkErrorAndKill () {
 
 function writelnError () {
 	echo -e "${RED} $@ ${NC}"
+}
+
+function writelnWarn () {
+	echo -e "${WARN} $@ ${NC}"
 }
 
 function writeln () {

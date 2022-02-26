@@ -86,6 +86,7 @@ else
     echo -e "Raspberry Pi 3B \t::\t bcm2837-rpi-3b"
     echo -e "Raspberry Pi 3B+ \t::\t bcm2837-rpi-3bp"
     echo -e "Raspberry Pi 4B \t::\t bcm2711-rpi-4b"
+    echo -e "Intel x86_64 Generic \t::\t x86-64"
 
     echo ""
     echo "How to use example:"

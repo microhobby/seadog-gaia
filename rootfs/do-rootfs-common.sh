@@ -19,7 +19,7 @@ function createImg () {
     mkdir -p dist/$1
 
     dd if=/dev/zero of=$IMAGE_FILE \
-        bs=1048 count=400240 status=progress
+        bs=1024 count=400000 status=progress
 
     # partitions
     sudo parted $IMAGE_FILE -s mktable msdos
@@ -76,11 +76,11 @@ function umountImg () {
     writeln '✅ IMG umounted'
 }
 
-function doRootfsArm64 () {
+function doRootfs () {
     writeln 'Installing rootfs files'
 
     # unpack
-    sudo tar -xzf rootfs/alpine-minirootfs-3.15.0-aarch64.tar.gz \
+    sudo tar -xzf rootfs/alpine-minirootfs-3.15.0-$1.tar.gz \
         -C rootfs/mntext/
 
     checkError
@@ -95,22 +95,42 @@ function doBootfs () {
     
     # copy u-boot
     writeln 'Installing Bootloader'
-    sudo cp uboot/$1/artifacts/$2/u-boot.bin rootfs/mntfat/bootImg
+    if [ "$grub" = "" ];
+    then
+        writelnWarn "This system uses U-boot as primary boot loader"
+        sudo cp uboot/$1/artifacts/$2/u-boot.bin rootfs/mntfat/bootImg
+    else
+        writelnWarn "This system uses GRUB as primary boot loader"
+        # sudo cp /home/castello/tmp/myos/OS/Kernel/Simple/src/kernel_1/MyOS.bin rootfs/mntfat/bootImg
+        sudo cp uboot/$1/artifacts/$2/u-boot.bin rootfs/mntfat/bootImg
+    fi
+    
     sudo cp uboot/$1/artifacts/$2/boot.scr.uimg rootfs/mntfat/
 
     # copy kernel
     writeln 'Installing Kernel'
-    sudo cp kernel/$1/artifacts/$2/arch/$3/boot/Image rootfs/mntfat/
+    echo "sudo cp kernel/$1/artifacts/$2/arch/$3/boot/$kernelImage rootfs/mntfat/"
+    sudo cp kernel/$1/artifacts/$2/arch/$3/boot/$kernelImage rootfs/mntfat/
 
     # copy emerg initrd
     sudo cp initrd/common/emerg.img rootfs/mntfat/
 
     # copy device tree
-    writeln 'Installing Device Tree'
-    sudo mkdir -p rootfs/mntfat/$vendor
-    sudo cp \
-        kernel/$1/artifacts/$2/arch/arm64/boot/dts/$4/$5 \
-        rootfs/mntfat/$vendor/$dtb
+    if [ "$dtb" = "" ];
+    then
+        writelnWarn 'System has no device trees'
+    else
+        writeln 'Installing Device Tree'
+        sudo mkdir -p rootfs/mntfat/$vendor
+        sudo cp \
+            kernel/$1/artifacts/$2/arch/arm64/boot/dts/$4/$5 \
+            rootfs/mntfat/$vendor/$dtb
+    fi
+
+    if [ "$grub" != "" ];
+    then
+        doGrubInstall
+    fi
     
     checkError
     writeln '✅ Boot Files installed'
@@ -133,7 +153,7 @@ function prepare () {
 
 function checkWSL () {
     if [[ -z "$WSL_DISTRO_NAME" ]]; then
-        echo 'we are not in WSL ...'
+        writelnWarn 'we are not in WSL ...'
     else
         writeln '📦 WSL :: Copying dist to C:'
 
@@ -287,17 +307,30 @@ function doChrootBase () {
     sudo umount ${chroot_dir}/sys/ 
 }
 
+function doGrubInstall () {
+    writeln 'Installing GRUB'
+
+    sudo grub-install \
+            --target=i386-pc \
+            --boot-directory=$PWD/rootfs/mntfat/ \
+            /dev/${PART_LOOP}
+
+    checkError
+    writeln '✅ GRUB installed'
+}
+
 function doRootFs () {
     prepare
     # create the img file and mount
     createImg $hardware
     mountImg
     # install boot files and kernel
-    doBootfs $family $hardware $arch $vendor $dtb
+    doBootfs $family $hardware $arch $vendor $dtb $kernelImage
     # install base distro
-    doRootfsArm64 $hardware
+    doRootfs $arch
     doModulesInstall $artifacts "$PWD/rootfs/mntext"
     doChrootBase "$PWD/rootfs/mntext" $hardware
+
     umountImg
     checkWSL
 }
