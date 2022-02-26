@@ -16,3 +16,4 @@ initrd/common/initramfs/sbin/
 initrd/common/initramfs/sys/
 emerg.img
 lasco
+*/**/*.tar.gz

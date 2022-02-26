@@ -8,6 +8,7 @@ export kernel_src="../linux"
 export hardware='bcm2711-rpi-4b'
 export family='rpi'
 export arch='arm64'
+export alpine_arch='aarch64'
 export vendor='broadcom'
 export dtb='bcm2711-rpi-4-b.dtb'
 
