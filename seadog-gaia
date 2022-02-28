@@ -23,7 +23,7 @@ else
     export SEADOG_BUILD_VERSION="$SEADOG_DEV"
 fi
 
-export SEADOG_NAME="gobble-gobble"
+export SEADOG_NAME="war-never-changes-🪖-💀"
 
 # create the files from templates
 function replaceVersions () {
