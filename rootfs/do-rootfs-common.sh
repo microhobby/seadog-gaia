@@ -80,15 +80,15 @@ function doRootfs () {
     writeln 'Installing rootfs files'
 
     # check if the rootfs file exists
-    if [ -f "rootfs/alpine-minirootfs-$ALPINE_VERSION-$1.tar.gz" ];
+    if [ -f "rootfs/alpine-minirootfs-$ALPINE_VERSION-$alpine_arch.tar.gz" ];
     then
-        writeln "rootfs/alpine-minirootfs-$ALPINE_VERSION-$1.tar.gz already exists ..."
+        writeln "rootfs/alpine-minirootfs-$ALPINE_VERSION-$alpine_arch.tar.gz already exists ..."
     else
-        wget "https://dl-cdn.alpinelinux.org/alpine/$ALPINE_MAJ_VERSION/releases/$1/alpine-minirootfs-$ALPINE_VERSION-$1.tar.gz"
+        wget "https://dl-cdn.alpinelinux.org/alpine/$ALPINE_MAJ_VERSION/releases/$alpine_arch/alpine-minirootfs-$ALPINE_VERSION-$alpine_arch.tar.gz"
     fi
     
     # unpack
-    sudo tar -xzf rootfs/alpine-minirootfs-$ALPINE_VERSIO-$1.tar.gz \
+    sudo tar -xzf alpine-minirootfs-$ALPINE_VERSION-$alpine_arch.tar.gz \
         -C rootfs/mntext/
 
     checkError
