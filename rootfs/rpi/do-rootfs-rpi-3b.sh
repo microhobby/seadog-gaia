@@ -11,5 +11,6 @@ export arch='arm64'
 export alpine_arch='aarch64'
 export vendor='broadcom'
 export dtb='bcm2837-rpi-3-b.dtb'
+export kernelImage='Image'
 
 doRootFs
