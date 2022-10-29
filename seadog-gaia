@@ -13,8 +13,8 @@ export SEADOG_MINOR_VERSION=0
 export SEADOG_BUILD_VERSION=0
 
 # Alpine version
-export ALPINE_VERSION="3.15.0"
-export ALPINE_MAJ_VERSION="v3.15"
+export ALPINE_VERSION="3.16.2"
+export ALPINE_MAJ_VERSION="v3.16"
 
 # for development and enginerring versions
 if [[ ! -v SEADOG_DEV ]]; then
