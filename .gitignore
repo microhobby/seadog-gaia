@@ -18,3 +18,4 @@ emerg.img
 lasco
 */**/*.tar.gz
 .vscode-ctags
+alpine-minirootfs*
