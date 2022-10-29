@@ -1,4 +1,3 @@
-.vscode/
 kernel/**/artifacts/
 uboot/**/artifacts/
 rootfs/mntext/
@@ -19,3 +18,4 @@ lasco
 */**/*.tar.gz
 .vscode-ctags
 alpine-minirootfs*
+dist
